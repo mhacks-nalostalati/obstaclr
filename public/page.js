@@ -79,6 +79,7 @@ $(function() {
     window.history.pushState(null, currentRoom, currentRoom);
 
     playersInLobby.remove();
+    
     gameStart.hide();
     gameplaySetup();
   });
@@ -91,12 +92,27 @@ $(function() {
     socket.removeAllListeners("addPlayer");
     socket.removeAllListeners("removePlayer");
 
+  
     //possibeTodo: accept invitation
-
-    window.history.pushState(null, room, room);
     playersInLobby.remove();
     gameStart.hide();
-    gameplaySetup();
+    $("#invitepage").fadeIn('fast', function() {});
+    var replacename = $("#name").html().replace("name", challenger);
+    $("#name").html(replacename);
+    
+    var role;
+
+    if (myDesignation == 1){
+      role = "player"}
+    else {
+      role = "mapper"
+    }
+
+    var replacerole = $("#role").html().replace("role", role);
+    $("#role").html(replacerole);
+    
+    window.history.pushState(null, room, room);
+    //gameplaySetup();
   });
 
   var gameplaySetup = function(){
