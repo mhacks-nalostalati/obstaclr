@@ -3,6 +3,7 @@ $(function() {
 
   var fullPlayerList = [];
   var name;
+  var designation;
 
   var splashMenu =  $(".splash-menu");
   var playerName = $('input[name=playerName]');
@@ -11,6 +12,7 @@ $(function() {
   var friendsName = $('input[name=friendsName]');
   var gameStart = $("#game-start");
   var playButton = $('#play');
+  var playersInLobby = $('#playersInLobby');
 
   //Populate list of current players on connection
   socket.on('fullList', function (playerList) {
@@ -38,24 +40,6 @@ $(function() {
       source: fullPlayerList
     });
   });
-
-
-  socket.on('invite', function (challenger, room) {
-    socket.removeAllListeners("addPlayer");
-    socket.removeAllListeners("removePlayer");
-
-    //possibeTodo: accept invitation
-
-    window.history.pushState(null, room, room);
-    gameStart.fadeOut('fast', function() {});
-    //todo: go to game as player
-  });
-
-  
-  socket.on('linecreated', function (x1, x2, y1, y2, color) {
-
-  });
-
 
   //format and add the name when they come in
   nextButton.click(function() {
@@ -86,12 +70,53 @@ $(function() {
     if (vsName < name) var newUrl = '/' + vsName + 'vs' + name;
     else var newUrl = '/' + name + 'vs' + vsName;
 
-    socket.emit('gameStart', vsName, name, newUrl);
+    designation = 0; //Currently defaulting to cartographer, 1 for player
+    //todo: set designation based on interface something
+
+    socket.emit('gameStart', vsName, name, newUrl, designation);
     window.history.pushState(null, newUrl, newUrl);
 
+    playersInLobby.remove();
     gameStart.fadeOut('fast', function() {});
-    //todo: go to game as cartographer
+    gameplaySetup();
   });
+
+  socket.on('invite', function (challenger, room, myDesignation) {
+
+    designation = myDesignation; //designation 0 for cartographer, 1 for player
+
+    socket.removeAllListeners("addPlayer");
+    socket.removeAllListeners("removePlayer");
+
+    //possibeTodo: accept invitation
+
+    window.history.pushState(null, room, room);
+    playersInLobby.remove();
+    gameStart.fadeOut('fast', function() {});
+    gameplaySetup();
+  });
+
+  var gameplaySetup = function(){
+
+    //todo: Draw the game canvas
+
+    if (designation == 0) { //if player is cartographer
+      socket.emit('createLine', x1, x2, y1, y2, color) {
+        
+      }
+      socket.emit('playerPositioned', x, y) {
+
+      } 
+    }
+    else if (designation == 0) { //if player is player
+      socket.emit('playerPosition', x, y) {
+
+      }
+      socket.on('lineCreated', x1, x2, y1, y2, color) {
+        
+      }
+    }
+  }
 
   //remove from everyone's list if they close the window
   $(window).on('beforeunload', function(){
