@@ -54,7 +54,7 @@ io.sockets.on('connection', function (socket) {
     }
     playerlist.push(name);
     console.log (name + " added to list from " + socket.id);
-    io.sockets.emit('addPlayer', name);
+    socket.broadcast.emit('addPlayer', name);
   });
 
   //when a player exits window or starts playing
@@ -65,7 +65,7 @@ io.sockets.on('connection', function (socket) {
     }
     playerlist.splice(playerlist.indexOf(name), 1);
     console.log (name + " removed from list from " + socket.id);
-    io.sockets.emit('removePlayer', name);
+    socket.broadcast.emit('removePlayer', name);
   });
 
   //when a line gets created
