@@ -1,5 +1,6 @@
 $(function() {
 
+
   var socket = io.connect(window.location.hostname);
 
   var fullPlayerList = [];
@@ -8,14 +9,16 @@ $(function() {
   var playerName = $('input[name=playerName]');
   var nextButton = $('#nextbutton');
   var friendsName = $('input[name=friendsName]');
+  var gameStart = $("#game-start");
 
   nextButton.click(function() {
-    splashmenu.remove();
     var enteredName = playerName.val();
     enteredName = enteredName.replace(/\s/g, "");
     enteredName = enteredName.toLowerCase();
     playerName.val(enteredName);
     socket.emit('newPlayer', enteredName);
+    splashMenu.remove();
+    gameStart.fadeIn('fast', function() {});
   });
 
   socket.on('fullList', function (playerList) {
