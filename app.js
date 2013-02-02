@@ -46,15 +46,23 @@ io.sockets.on('connection', function (socket) {
 
   //when a player enters their name in the first window
   socket.on('newPlayer', function (name) {
-    if (!(playerlist.indexOf(name) == -1)) return;
+    if (!(playerlist.indexOf(name) == -1)) {
+      console.log (name + " already exists");
+      return;
+    }
     playerlist.push(name);
+    console.log (name + " added to list");
     io.sockets.emit('addPlayer', { name: name });
   });
 
   //when a player exits window or starts playing
   socket.on('playerGone', function (name) {
-    if (playerlist.indexOf(name) == -1) return;
+    if (playerlist.indexOf(name) == -1) {
+      console.log (name + " does not exist");
+      return;
+    }
     playerlist.splice(playerlist.indexOf(name), 1);
+    console.log (name + " removed from list");
     io.sockets.emit('removePlayer', { name: name });
   });
 
