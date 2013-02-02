@@ -46,6 +46,10 @@ $(function() {
   //format and add the name when they come in
   nextButton.click(function() {
     name = playerName.val();
+    if (name == '' || typeof name =='undefined'){
+      $("#namevalidation").css("display", "block");
+    }
+    else {
     name = name.replace(/\s/g, "");
     name = name.toLowerCase();
     playerName.val(name);
@@ -56,8 +60,11 @@ $(function() {
     socket.emit('newPlayer', name);
     splashMenu.remove();
     gameStart.show();
+    }
   });
 
+
+      //when user selects role of mapper
       $("#mapper").click(function(){
         designation = 0;
         $("#mapper").css("color", "#ff4900");
@@ -65,6 +72,7 @@ $(function() {
         
     });
 
+    //when user selects role of player
     $("#player").click(function(){
       designation = 1;
       $("#player").css("color", "#ff4900");
@@ -81,6 +89,13 @@ $(function() {
   //when they click the play button
   playButton.click(function() {
 
+    if (designation == undefined){
+      $("#rolevalidation").css("display", "block");
+    }
+    else if (vsName == undefined){
+      $("#friendnamevalidation").css("display", "block");
+    }
+    
     var vsName = friendsName.val().toLowerCase();
     friendsName.val(vsName);
     if (fullPlayerList.indexOf(vsName) == -1) return;
@@ -99,20 +114,20 @@ $(function() {
     
     gameStart.hide();
     gameplaySetup();
+    
   });
 
   socket.on('invite', function (challenger, room, myDesignation) {
-
     designation = myDesignation; //designation 0 for cartographer, 1 for player
     currentRoom = room; //sets the global room to send with each request, quicker than a hash lookup
 
     socket.removeAllListeners("addPlayer");
     socket.removeAllListeners("removePlayer");
 
-  
-    //possibeTodo: accept invitation
     playersInLobby.remove();
     gameStart.hide();
+
+    //possibeTodo: accept invitation
     $("#invitepage").show();
     var replacename = $("#name").html().replace("name", challenger);
     $("#name").html(replacename);
@@ -130,6 +145,7 @@ $(function() {
     
     window.history.pushState(null, room, room);
     //gameplaySetup();
+    
   });
 
   var gameplaySetup = function(){
