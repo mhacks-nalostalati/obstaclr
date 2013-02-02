@@ -4,6 +4,7 @@ $(function() {
   var fullPlayerList = [];
   var name;
   var designation;
+  var currentRoom;
 
   var splashMenu =  $(".splash-menu");
   var playerName = $('input[name=playerName]');
@@ -67,14 +68,14 @@ $(function() {
     socket.removeAllListeners("addPlayer");
     socket.removeAllListeners("removePlayer");
 
-    if (vsName < name) var newUrl = '/' + vsName + 'vs' + name;
-    else var newUrl = '/' + name + 'vs' + vsName;
+    if (vsName < name) var room = '/' + vsName + 'vs' + name;
+    else var currentRoom = '/' + name + 'vs' + vsName;
 
     designation = 0; //Currently defaulting to cartographer, 1 for player
     //todo: set designation based on interface something
 
-    socket.emit('gameStart', vsName, name, newUrl, designation);
-    window.history.pushState(null, newUrl, newUrl);
+    socket.emit('gameStart', vsName, name, currentRoom, designation);
+    window.history.pushState(null, currentRoom, currentRoom);
 
     playersInLobby.remove();
     gameStart.fadeOut('fast', function() {});
@@ -84,6 +85,7 @@ $(function() {
   socket.on('invite', function (challenger, room, myDesignation) {
 
     designation = myDesignation; //designation 0 for cartographer, 1 for player
+    currentRoom = room; //sets the global room to send with each request, quicker than a hash lookup
 
     socket.removeAllListeners("addPlayer");
     socket.removeAllListeners("removePlayer");
@@ -98,22 +100,31 @@ $(function() {
 
   var gameplaySetup = function(){
 
-    //todo: Draw the game canvas
+    //todo: Draw the game canvas, show gamebox
 
     if (designation == 0) { //if player is cartographer
-      socket.emit('createLine', x1, x2, y1, y2, color) {
-        
+      var lineToServer = function(x1, x2, y1, y2, color) {
+        socket.emit('createLine', x1, x2, y1, y2, color, currentRoom) {
+          //send lines into the server to have them redrawn for player
+          //call lineToServer from wherever it needs to be called, change scope to global
+        }
       }
-      socket.emit('playerPositioned', x, y) {
 
+      socket.on('playerPositioned', x, y) {
+        //position the player for the cartographer baesd on server
       } 
     }
-    else if (designation == 0) { //if player is player
-      socket.emit('playerPosition', x, y) {
 
+    else if (designation == 1) { //if player is player
+      var positionToServer = function(x, y) {
+        socket.emit('playerPosition', x, y, currentRoom) {
+          //Send player's position to server
+          //call positionToServer from wherever it needs to be called, change scope to global
+        }
       }
+      
       socket.on('lineCreated', x1, x2, y1, y2, color) {
-        
+        //create lines for player based on socket
       }
     }
   }
