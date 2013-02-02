@@ -42,6 +42,8 @@ var playerlist = [];
 var clientlist = [];
 var clients = {};
 
+var lines = {};
+
 io.sockets.on('connection', function (socket) {
   
   //give current list on connection
@@ -93,15 +95,44 @@ io.sockets.on('connection', function (socket) {
     invitee.broadcast.emit('removePlayer', opponent);
   });
 
-  //when a line gets created
-  socket.on('lineMade', function () {
-    // io.sockets.emit('createLine', {});
+  socket.on('createLine', function(X1, X2, Y1, Y2, Color, currentRoom) {
+
+    //possibleTodo: check if line is valid under rules
+
+    if (!lines.currentRoom) lines.currentRoom = [];
+
+    run = Math.abs(X2-X1);
+    rise = Math.abs(Y2-Y1);
+    var theta = (run)? Math.tan(rise/run) : Math.PI/2;
+
+    var thisLine = {
+      x1: X1, 
+      x2: X2, 
+      y1: Y1, 
+      y2: Y2, 
+      dx: run,
+      dy: rise,
+      fatX: (dx/dy),
+      fatY: (dy/dx),
+      color: Color
+    }
+
+    lines.currentRoom.push(thisLine);
+
   });
 
-  socket.on('lineMade', function () {
-    // io.sockets.emit('createLine', {});
+  socket.on('playerPosition', function(x, y, currentRoom) {
+    //move each line one in the x position
+    //crash detection of player with lines
+    //give back position of player and every line
+    socket.emit('playerPositioned', x, y); //for everyone but player
+    io.sockets.in(currentRoom).emit('lineCreated', x1, x2, y1, y2, color);
   });
-  //updating the player position
+
+  socket.on('playerExit', function(currentRoom) {
+    socket.broadcast.to(currentRoom).emit('opponentQuit');
+  });
+     
 
 });
 

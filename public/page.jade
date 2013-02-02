@@ -9,6 +9,7 @@ html
     script(src='crafty.js')
     script(src='/socket.io/socket.io.js')
     script(src='page.js')
+  
   body
     .splash-menu
       h1.main-header
@@ -20,6 +21,28 @@ html
         input(type="text", name="playerName")
         br
         button#nextbutton Next
+
+    #game-start
+      h1.main-header
+        |obstacl<span class='r'>r</span>
+      #chooserole
+        |choose your role
+        .role#mapper MAPPER
+        .role#player PLAYER
+      #friendname
+        label
+          |if you are playing with a friend, enter your friend's name:
+        br
+        input(type="text", name="friendsName")
+        br
+        button#play INVITE 
+        br
+        br
+      #random
+        |otherwise, find a match
+        button#match MATCH ME NOW
+
+
     .game-box
       #greenzone
       h1.main-header
@@ -85,26 +108,6 @@ html
           br
           button#newmatch NEW MATCH
           button#quit QUIT
-
-    #game-start
-      h1.main-header
-        |obstacl<span class='r'>r</span>
-      #chooserole
-        |choose your role
-        .role#mapper MAPPER
-        .role#player PLAYER
-      #friendname
-        label
-          |if you are playing with a friend, enter your friend's name:
-        br
-        input(type="text", name="friendsName")
-        br
-        button#play INVITE 
-        br
-        br
-      #random
-        |otherwise, find a match
-        button#match MATCH ME NOW
 
     label#playersInLobby
       span#lobbyCount| 0

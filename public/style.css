@@ -8,7 +8,7 @@ a img{border:none}
 body{font-family:'Iceland',sans;font-size:100%;overflow:hidden;background-color:#ddd}
 .main-header{font-size:4em;font-weight:bold;color:#0b61a4;width:95%;padding-left:5%;background:#eee;}
 .main-header .r{color:#ff4900}
-.splash-menu{display:none;width:500px;margin:50px auto;background-color:#fff}
+.splash-menu{width:500px;margin:50px auto;background-color:#fff}
 #name-entry{font-size:1.5em;text-align:center;padding:30px 0 30px 0;}
 #name-entry label{color:#ff7640;font-weight:bold}
 #name-entry input{font-size:.8em;margin:5px 0;padding:5px;border:2px solid #000}
@@ -30,7 +30,7 @@ body{font-family:'Iceland',sans;font-size:100%;overflow:hidden;background-color:
 #random .role{color:#000}
 #random .role:hover{color:#ff7640}
 #game-start{display:none;width:600px;margin:50px auto;background-color:#fff}
-.game-box{display:relative;width:100%;height:100%}
+.game-box{display:none;position:relative;width:100%;height:100%}
 #greenzone{position:absolute;z-index:2;background:rgba(103,227,0,0.3);width:200px;height:400px;left:50%;top:114px}
 #canvas{width:1195px;border-left:5px solid #000;height:400px;position:relative;left:50%;margin-top:50px;margin-bottom:0;margin-left:-600px;background:#fff;margin-bottom:-3px}
 .endofgamepage{display:none;width:1195px;border-left:5px solid #000;height:400px;position:absolute;top:64px;left:50%;margin-top:50px;margin-bottom:0;margin-left:-600px;background:#fff;z-index:1000;}
