@@ -14,6 +14,7 @@ $(function() {
   var gameStart = $("#game-start");
   var playButton = $('#play');
   var playersInLobby = $('#playersInLobby');
+  var gamebox = $('.game-box');
 
   //Populate list of current players on connection
   socket.on('fullList', function (playerList) {
@@ -78,7 +79,7 @@ $(function() {
     window.history.pushState(null, currentRoom, currentRoom);
 
     playersInLobby.remove();
-    gameStart.fadeOut('fast', function() {});
+    gameStart.hide();
     gameplaySetup();
   });
 
@@ -94,46 +95,49 @@ $(function() {
 
     window.history.pushState(null, room, room);
     playersInLobby.remove();
-    gameStart.fadeOut('fast', function() {});
+    gameStart.hide();
     gameplaySetup();
   });
 
   var gameplaySetup = function(){
 
     //todo: Draw the game canvas, show gamebox
+    gamebox.show();
 
     if (designation == 0) { //if player is cartographer
+      
       var lineToServer = function(x1, x2, y1, y2, color) {
-        socket.emit('createLine', x1, x2, y1, y2, color, currentRoom) {
-          //send lines into the server to have them redrawn for player
-          //call lineToServer from wherever it needs to be called, change scope to global
-        }
+        socket.emit('createLine', x1, x2, y1, y2, color, currentRoom);
       }
 
-      socket.on('playerPositioned', x, y) {
-        //position the player for the cartographer baesd on server
-      } 
+      // socket.on('playerPositioned', x, y) {};
+      //   //position the player for the cartographer baesd on server
+      // }; 
+
     }
 
     else if (designation == 1) { //if player is player
+      
       var positionToServer = function(x, y) {
-        socket.emit('playerPosition', x, y, currentRoom) {
-          //Send player's position to server
-          //call positionToServer from wherever it needs to be called, change scope to global
-        }
+        socket.emit('playerPosition', x, y, currentRoom)
       }
       
-      socket.on('lineCreated', x1, x2, y1, y2, color) {
-        //create lines for player based on socket
-      }
+      // socket.on('lineCreated', x1, x2, y1, y2, color) {
+      //   //create lines for player based on socket
+      // }
+
     }
   }
 
   //remove from everyone's list if they close the window
   $(window).on('beforeunload', function(){
-    if (name) {
+    if (gamebox.is(":visible")) {
+      socket.emit('playerExit', currentRoom);
+      return name + ', you have left the game';
+    }
+    else if (name) {
       socket.emit('playerGone', name);
-      return 'please dont leave';
+      return name + ', we are sorry to see you go';
     }
   });
 
