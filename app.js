@@ -43,7 +43,7 @@ var playerlist = [];
 io.sockets.on('connection', function (socket) {
   
   //give current list on connection
-  io.sockets.emit('fullList', playerlist);
+  io.sockets.socket(socket.id).emit('fullList', playerlist);
   console.log ("sent a list of " + playerlist.length + " players to " + socket.id);
 
   //when a player enters their name in the first window

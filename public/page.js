@@ -4,6 +4,7 @@ $(function() {
   var socket = io.connect(window.location.hostname);
 
   var fullPlayerList = [];
+  var name;
 
   var splashMenu =  $(".splash-menu");
   var playerName = $('input[name=playerName]');
@@ -12,11 +13,11 @@ $(function() {
   var gameStart = $("#game-start");
 
   nextButton.click(function() {
-    var enteredName = playerName.val();
-    enteredName = enteredName.replace(/\s/g, "");
-    enteredName = enteredName.toLowerCase();
-    playerName.val(enteredName);
-    socket.emit('newPlayer', enteredName);
+    name = playerName.val();
+    name = name.replace(/\s/g, "");
+    name = name.toLowerCase();
+    playerName.val(name);
+    socket.emit('newPlayer', name);
     splashMenu.remove();
     gameStart.fadeIn('fast', function() {});
   });
@@ -24,22 +25,28 @@ $(function() {
   socket.on('fullList', function (playerList) {
     fullPlayerList = playerList;
     friendsName.autocomplete({
-      source: fullPlayerList;
+      source: fullPlayerList
     });
   });
 
   socket.on('addPlayer', function (name) {
     fullPlayerList.push(name);
     friendsName.autocomplete({
-      source: fullPlayerList;
+      source: fullPlayerList
     });
   });
 
   socket.on('removePlayer', function (name) {
-    fullPlayerList.splice(playerlist.indexOf(name), 1);
+    fullPlayerList.splice(fullPlayerList.indexOf(name), 1);
     friendsName.autocomplete({
-      source: fullPlayerList;
+      source: fullPlayerList
     });
+  });
+
+  $(window).unload(function() {
+    if (name) {
+      socket.emit('playerGone', name)
+    };
   });
 
 });
