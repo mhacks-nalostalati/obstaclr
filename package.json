@@ -1,0 +1,21 @@
+{
+  "name": "Obstclr",
+  "author": "nalostalati",
+  "version": "0.0.1",
+
+  "dependencies": {
+    "stylus": "0.32.0",
+    "express": "3.1.0",
+    "node-gcm": "0.9.x"
+  },
+
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mhacks-nalostalati/obstaclr.git"
+  },
+
+  "engines": {
+    "node": "0.8.x",
+    "npm": "1.1.x"
+  }
+}
