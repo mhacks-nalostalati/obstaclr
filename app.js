@@ -7,6 +7,7 @@ var app = express()
   , stylus = require('stylus')
   , nib = require('nib')
   , path = require('path')
+  , jade = require('jade')
 
 function compile(str, path) {
   return stylus(str)
@@ -24,6 +25,8 @@ app.configure(function() {
     src: __dirname + '/public'
     , compile: compile}));
   app.use(express.static(__dirname + '/public'));
+  app.set("view options", {layout: false});
+  // app.engine('html', jade.renderFile);
 });
 
 // Heroku won't actually allow us to use WebSockets
@@ -34,18 +37,40 @@ io.configure(function () {
   io.set("polling duration", 10);
 });
 
-var status = "All is well.";
+var playerlist = [];
 
 io.sockets.on('connection', function (socket) {
-  io.sockets.emit('status', { status: status }); // note the use of io.sockets to emit but socket.on to listen
-  socket.on('reset', function (data) {
-    status = "War is imminent!";
-    io.sockets.emit('status', { status: status });
+  
+  //give current list on connection
+  io.sockets.emit('fullList', playerlist);
+
+  //when a player enters their name in the first window
+  socket.on('newPlayer', function (name) {
+    if (!(playerlist.indexOf(name) == -1)) return;
+    playerlist.push(name);
+    io.sockets.emit('addPlayer', { name: name });
   });
+
+  //when a player exits window or starts playing
+  socket.on('playerGone', function (name) {
+    if (playerlist.indexOf(name) == -1) return;
+    playerlist.splice(playerlist.indexOf(name), 1);
+    io.sockets.emit('removePlayer', { name: name });
+  });
+
+  //when a line gets created
+  socket.on('lineMade', function (x, y1, y2, color) {
+    // io.sockets.emit('createLine', {});
+  });
+
+  //updating the player position
+
+
+
 });
 
 app.get('/', function(req, res){
-  res.sendfile("public/page.html");
+  res.sendfile('public/page.html');
 });
 
 server.listen(app.get('port'));

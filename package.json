@@ -8,7 +8,8 @@
     "express": "3.1.0",
     "node-gcm": "0.9.3",
     "socket.io": "0.9.13",
-    "nib": "0.9.1"
+    "nib": "0.9.1",
+    "jade": "0.28.1"
   },
 
   "repository": {
