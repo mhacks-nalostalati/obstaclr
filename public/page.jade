@@ -21,6 +21,8 @@ html
         input(type="text", name="playerName")
         br
         button#nextbutton Next
+        br 
+        br
 
     #game-start
       h1.main-header
@@ -32,13 +34,19 @@ html
         input(type="text", name="friendsName")
         br
         button#play PLAY NOW
-      #random
-        |otherwise, choose your role
         br
-        .role MAPPER
-        .role PLAYER
         br
-        button#match MATCH ME NOW
+      //#random
+      //|otherwise, choose your role
+      //br
+      //.role MAPPER
+      //.role PLAYER
+      //br
+      //button#match MATCH ME NOW
+
+    label#playersInLobby
+      span#lobbyCount| 0
+      |  players in the lobby
 
 
 
