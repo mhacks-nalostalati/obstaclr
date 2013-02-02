@@ -46,6 +46,7 @@ $(function() {
   //format and add the name when they come in
   nextButton.click(function() {
     name = playerName.val();
+    //validation to ensure user enters a name
     if (name == '' || typeof name =='undefined'){
       $("#namevalidation").css("display", "block");
     }
@@ -88,10 +89,11 @@ $(function() {
 
   //when they click the play button
   playButton.click(function() {
-
+    //validation to ensure user chooses a role
     if (designation == undefined){
       $("#rolevalidation").css("display", "block");
     }
+
     else if (vsName == undefined){
       $("#friendnamevalidation").css("display", "block");
     }
