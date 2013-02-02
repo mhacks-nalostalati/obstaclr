@@ -18,3 +18,29 @@ html
         input(type="text, name="playerName")
         br
         button#nextbutton Next
+    .game-box
+      h1.main-header
+        |obstacl<span class='r'>r</span>
+      #cr-stage
+
+      .controls-box
+        .player-controls
+          .content
+            |use the arrow keys to move up and down. avoid the obstaclr's obstacles. reach the green zone to win
+
+        .obstaclr-controls
+          .content
+            |paint lines to block the player, with a limited supply of paint. black kills, orange stuns, and blue slows
+          .buttons
+            #blackbuttonwrap
+              #blackcounter
+                |25
+              button#blackpaintbutton.selected a
+            #bluebuttonwrap
+              #bluecounter
+                |78
+              button#bluepaintbutton s
+            #orangebuttonwrap
+              #orangecounter
+                |100
+              button#orangepaintbutton d
