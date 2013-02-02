@@ -1,1 +1,0 @@
-var splashmenu =  $(".splash-menu");
