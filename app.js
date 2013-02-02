@@ -78,10 +78,10 @@ io.sockets.on('connection', function (socket) {
     socket.broadcast.emit('removePlayer', name);
   });
 
-  socket.on('gameStart', function (opponent, challenger, room) {
+  socket.on('gameStart', function (opponent, challenger, room, designation) {
     var position = playerlist.indexOf(opponent);
     var invitee = clients[clientlist[position]];
-    invitee.emit('invite', challenger, room, 1);
+    invitee.emit('invite', challenger, room, (1 - designation));
 
     socket.join(room);
     invitee.join(room);

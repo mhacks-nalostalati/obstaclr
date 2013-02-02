@@ -71,6 +71,8 @@ $(function() {
     else var newUrl = '/' + name + 'vs' + vsName;
 
     designation = 0; //Currently defaulting to cartographer, 1 for player
+    //todo: set designation based on interface something
+
     socket.emit('gameStart', vsName, name, newUrl, designation);
     window.history.pushState(null, newUrl, newUrl);
 
