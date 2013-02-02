@@ -5,10 +5,17 @@ ol,ul{list-style:none}
 table{border-collapse:separate;border-spacing:0;vertical-align:middle}
 caption,th,td{text-align:left;font-weight:normal;vertical-align:middle}
 a img{border:none}
-body{font-family:'Iceland',sans;font-size:100%;overflow:hidden}
-.main-header{font-size:4em;font-weight:bold;color:#0b61a4;}
+body{font-family:'Iceland',sans;font-size:100%;overflow:hidden;background-color:#ddd}
+.main-header{font-size:4em;font-weight:bold;color:#0b61a4;width:95%;padding-left:5%;background:#eee;}
 .main-header .r{color:#ff4900}
-.splash-menu{width:500px;height:400px;margin:50px auto}
+.splash-menu{width:500px;margin:50px auto;background-color:#fff}
+#name-entry{font-size:1.5em;text-align:center;padding:30px 0 30px 0;}
+#name-entry label{color:#ff7640}
+#name-entry input{font-size:.8em;padding:5px;border:2px solid #000}
+#name-entry button{background-color:#666;font-family:"Iceland";font-size:.9em;border:none;color:#fff;padding:3px}
+#name-entry button:hover{background-color:#333}
+#name-entry button:active{background-color:#bf5930}
+#game-start{display:none}
 .game-box{width:1000px;height:700px;background-color:#008000}
 .hidden-below{-webkit-transform:translate(0,1000px);-moz-transform:translate(0,1000px);-o-transform:translate(0,1000px);-ms-transform:translate(0,1000px);transform:translate(0,1000px)}
 .hidden-above{-webkit-transform:translate(0,-1000px);-moz-transform:translate(0,-1000px);-o-transform:translate(0,-1000px);-ms-transform:translate(0,-1000px);transform:translate(0,-1000px)}

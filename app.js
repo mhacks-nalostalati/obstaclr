@@ -6,7 +6,7 @@ var app = express()
   , io = require('socket.io').listen(server)
   , stylus = require('stylus')
   , nib = require('nib')
-  , path = require('path');
+  , path = require('path')
 
 function compile(str, path) {
   return stylus(str)
