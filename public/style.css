@@ -33,7 +33,7 @@ body{font-family:'Iceland',sans;font-size:100%;overflow:hidden;background-color:
 .game-box{display:relative;width:100%;height:100%}
 #greenzone{position:absolute;z-index:2;background:rgba(103,227,0,0.3);width:200px;height:400px;left:50%;top:114px}
 #canvas{width:1195px;border-left:5px solid #000;height:400px;position:relative;left:50%;margin-top:50px;margin-bottom:0;margin-left:-600px;background:#fff}
-.endofgamepage{width:1195px;border-left:5px solid #000;height:400px;position:absolute;top:64px;left:50%;margin-top:50px;margin-bottom:0;margin-left:-600px;background:#fff;z-index:1000;}
+.endofgamepage{display:none;width:1195px;border-left:5px solid #000;height:400px;position:absolute;top:64px;left:50%;margin-top:50px;margin-bottom:0;margin-left:-600px;background:#fff;z-index:1000;}
 .endofgamepage #yolotext,.endofgamepage #wintext,.endofgamepage #losetext{font-size:200px;text-align:center;color:#ff4900;margin:20px 0 20px 0}
 .endofgamepage #losetext{font-size:150px}
 .endofgamepage #losemessage,.endofgamepage #winmessage{font-size:40px;text-align:center;}
