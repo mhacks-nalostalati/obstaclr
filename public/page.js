@@ -55,7 +55,7 @@ $(function() {
     }
     socket.emit('newPlayer', name);
     splashMenu.remove();
-    gameStart.fadeIn('fast', function() {});
+    gameStart.show();
   });
 
       $("#mapper").click(function(){
@@ -113,7 +113,7 @@ $(function() {
     //possibeTodo: accept invitation
     playersInLobby.remove();
     gameStart.hide();
-    $("#invitepage").fadeIn('fast', function() {});
+    $("#invitepage").show();
     var replacename = $("#name").html().replace("name", challenger);
     $("#name").html(replacename);
     
