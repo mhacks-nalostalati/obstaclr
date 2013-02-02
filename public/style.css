@@ -32,16 +32,16 @@ body{font-family:'Iceland',sans;font-size:100%;overflow:hidden;background-color:
 #game-start{display:none;width:600px;margin:50px auto;background-color:#fff}
 .game-box{display:relative;width:100%;height:100%}
 #greenzone{position:absolute;z-index:2;background:rgba(103,227,0,0.3);width:200px;height:400px;left:50%;top:114px}
-#canvas{width:1195px;border-left:5px solid #000;height:400px;position:relative;left:50%;margin-top:50px;margin-bottom:0;margin-left:-600px;background:#fff}
+#canvas{width:1195px;border-left:5px solid #000;height:400px;position:relative;left:50%;margin-top:50px;margin-bottom:0;margin-left:-600px;background:#fff;margin-bottom:-3px}
 .endofgamepage{display:none;width:1195px;border-left:5px solid #000;height:400px;position:absolute;top:64px;left:50%;margin-top:50px;margin-bottom:0;margin-left:-600px;background:#fff;z-index:1000;}
-.endofgamepage #yolotext,.endofgamepage #wintext,.endofgamepage #losetext{font-size:200px;text-align:center;color:#ff4900;margin:20px 0 20px 0}
-.endofgamepage #losetext{font-size:150px}
-.endofgamepage #losemessage,.endofgamepage #winmessage{font-size:40px;text-align:center;}
-.endofgamepage #losemessage .r,.endofgamepage #winmessage .r{color:#ff4900}
-.endofgamepage #losemessage .bluetext,.endofgamepage #winmessage .bluetext{color:#0b61a4}
-.endofgamepage #losemessage button,.endofgamepage #winmessage button{background-color:#666;font-family:"Iceland";font-size:.9em;border:none;color:#fff;padding:3px;margin-left:10px;margin-right:10px}
-.endofgamepage #losemessage button:hover,.endofgamepage #winmessage button:hover{background-color:#333}
-.endofgamepage #losemessage button:active,.endofgamepage #winmessage button:active{background-color:#bf5930}
+.endofgamepage .bigcaption{font-size:150px;text-align:center;color:#ff4900;margin:20px 0 20px 0}
+.endofgamepage .messagebox{font-size:40px;text-align:center;}
+.endofgamepage .messagebox .r{color:#ff4900}
+.endofgamepage .messagebox .bluetext{color:#0b61a4}
+.endofgamepage .messagebox button{background-color:#666;font-family:"Iceland";font-size:.9em;border:none;color:#fff;padding:3px;margin-left:10px;margin-right:10px}
+.endofgamepage .messagebox button:hover{background-color:#333}
+.endofgamepage .messagebox button:active{background-color:#bf5930}
+#playerwinpage{display:block}
 .controls-box{vertical-align:top;border-top:2px solid #999;width:1200px;margin:0 auto;background-color:#ccc;height:100px;font-size:1.3em;}
 .controls-box h2{text-align:center;width:100%;font-size:1.3em}
 .player-controls{vertical-align:top;display:inline-block;width:559px;height:100%;padding-left:20px;padding-right:20px;text-align:center;border-right:2px solid #999;}

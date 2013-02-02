@@ -26,9 +26,9 @@ html
         |obstacl<span class='r'>r</span>
       canvas#canvas(width="1195", height="400")
       .endofgamepage#yolopage
-        #yolotext YOLO
-        #losemessage 
-          #losemessagetext
+        .bigcaption YOLO
+        .messagebox
+          .message
             |player <span class='r'>r</span> dead. and you only live <span class=bluetext>once</span>.
           br
           button#switch SWITCH
@@ -53,21 +53,37 @@ html
               #yellowcounter
                 |100
               button#yellowpaintbutton d
-      .endofgamepage#winpage
-        #wintext YOU WIN
-        #winmessage 
-          #winmessagetext
-            |player <span class='r'>r</span> alive. <span class=bluetext>this time</span>.
+      .endofgamepage#playerwinpage
+        .bigcaption YOU WIN
+        .messagebox
+          .message
+            |you <span class='r'>r</span> made it to the end. <span class=bluetext>this time</span>.
           br
           button#switch SWITCH
           button#quit QUIT
       .endofgamepage#losepage
-        #losetext HE CAUGHT UP
-        #losemessage 
-          #losemessagetext
+        #bigcaption HE CAUGHT UP
+        #messagebox 
+          #message
             |player <span class='r'>r</span> alive. <span class=bluetext>you lose</span>.
           br
           button#switch SWITCH
+          button#quit QUIT
+      .endofgamepage#mapperwinpage
+        .bigcaption U DREW GOOD
+        .messagebox 
+          .message
+            |player <span class='r'>r</span> dead. <span class=bluetext>you win</span>.
+          br
+          button#switch SWITCH
+          button#quit QUIT
+      .endofgamepage#quitpage
+        .bigcaption UH-OH
+        .messagebox 
+          .message
+            |player <span class='r'>r</span> quit. it's not you, it's <span class=bluetext>him</span>.
+          br
+          button#newmatch NEW MATCH
           button#quit QUIT
 
 
