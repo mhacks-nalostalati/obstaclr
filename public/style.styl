@@ -67,21 +67,83 @@ body
   button:active
     background-color: $lightorange
 
+#friendname
+  font-size: 1.5em
+  text-align:center
+  padding: 30px 0px 0px 0px
+  label
+    color: #666
+  input
+    font-size: .8em
+    padding: 5px
+    border: 2px solid black
+  button
+    background-color: #666
+    font-family: "Iceland"
+    font-size: .9em
+    border: none
+    color:white
+    padding: 3px
+  button:hover
+    background-color:#333
+  button:active
+    background-color: $darkorange
+
+#random
+  font-size: 1.5em
+  text-align:center
+  color: #666
+  padding: 30px 0px 30px 0px
+  input
+    margin-bottom:10px;
+  button
+    background-color: #666
+    font-family: "Iceland"
+    font-size: .9em
+    border: none
+    color:white
+    padding: 3px
+  button:hover
+    background-color:#333
+  button:active
+    background-color: $darkorange
+  .role
+    color: black
+  .role:hover
+    color: $lightorange
+
 
 #game-start
   display:none
+  width: 600px
+  margin: 50px auto
+  background-color: #fff
 
 .game-box
+  display: relative
   width: 100%
   height:100%
-
-#crafty-box
-  width: 1200px
+#greenzone
+  position: absolute
+  z-index 2
+  background: rgba(103, 227, 0, .3)
+  width:200px
+  height:400px
+  left: 50%
+  top:114px
+#canvas
+  width: 1195px
+  border-left:5px solid black
   height: 400px
-  margin: 50px auto 0 auto
+  position relative
+  left 50%
+  margin-top:50px
+  margin-bottom:0
+  margin-left: -600px
   background: white
 
 .controls-box
+  vertical-align:top
   border-top: 2px solid #999
   width:1200px
   margin: 0 auto
@@ -128,8 +190,8 @@ body
       width:80px
     #bluecounter
       color $blue
-    #orangecounter
-      color $orange
+    #yellowcounter
+      color $yellow
     button
       font-family "Iceland"
       width: 50px
@@ -153,13 +215,13 @@ body
       background: $lightblue
     #bluepaintbutton:active
       background: $lighterblue
-    #orangepaintbutton
-      background: $orange
+    #yellowpaintbutton
+      background: $yellow
       color: white
-    #orangepaintbutton:hover
-      background: $lightorange
-    #orangepaintbutton:active
-      background: $lighterorange
+    #yellowpaintbutton:hover
+      background: $lightyellow
+    #yellowpaintbutton:active
+      background: $lighteryellow
 
 .hidden-below
   transform:translate(0px, 1000px);

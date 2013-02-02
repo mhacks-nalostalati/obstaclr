@@ -35,6 +35,7 @@ app.configure(function() {
 io.configure(function () {
   io.set("transports", ["xhr-polling"]);
   io.set("polling duration", 10);
+  io.set('log level', 1);
 });
 
 var playerlist = [];
@@ -42,28 +43,29 @@ var playerlist = [];
 io.sockets.on('connection', function (socket) {
   
   //give current list on connection
-  io.sockets.emit('fullList', playerlist);
+  io.sockets.socket(socket.id).emit('fullList', playerlist);
+  console.log ("sent a list of " + playerlist.length + " players to " + socket.id);
 
   //when a player enters their name in the first window
   socket.on('newPlayer', function (name) {
     if (!(playerlist.indexOf(name) == -1)) {
-      console.log (name + " already exists");
+      console.log (name + " already exists, error from " + socket.id);
       return;
     }
     playerlist.push(name);
-    console.log (name + " added to list");
-    io.sockets.emit('addPlayer', { name: name });
+    console.log (name + " added to list from " + socket.id);
+    socket.broadcast.emit('addPlayer', name);
   });
 
   //when a player exits window or starts playing
   socket.on('playerGone', function (name) {
     if (playerlist.indexOf(name) == -1) {
-      console.log (name + " does not exist");
+      console.log (name + " does not exist, error from " + socket.id);
       return;
     }
     playerlist.splice(playerlist.indexOf(name), 1);
-    console.log (name + " removed from list");
-    io.sockets.emit('removePlayer', { name: name });
+    console.log (name + " removed from list from " + socket.id);
+    socket.broadcast.emit('removePlayer', name);
   });
 
   //when a line gets created

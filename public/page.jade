@@ -2,35 +2,36 @@
 html
   head
     title="obstaclr"
+    link(rel='stylesheet', href='http://code.jquery.com/ui/1.10.0/themes/base/jquery-ui.css')
     link(rel='stylesheet', href='style.css')
     script(src='//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js')
-    script(src='game.js')
-    script(src='page.js')
+    script(src='//code.jquery.com/ui/1.10.0/jquery-ui.js')
     script(src='crafty.js')
+    script(src='/socket.io/socket.io.js')
+    script(src='page.js')
   body
     .splash-menu
       h1.main-header
         |obstacl<span class='r'>r</span>
       #name-entry
         label
-          enter your name:
+          |enter your name:
         br
-        input(type="text, name="playerName")
+        input(type="text", name="playerName")
         br
         button#nextbutton Next
     .game-box
+      #greenzone
       h1.main-header
         |obstacl<span class='r'>r</span>
-      #cr-stage
-
+      canvas#canvas(width="1195", height="400")
       .controls-box
         .player-controls
           .content
-            |use the arrow keys to move up and down. avoid the obstaclr's obstacles. reach the green zone to win
-
+            |use the arrow keys to move up and down. avoid the obstaclr's obstacles. reach the green zone to win. hit the black zone and die
         .obstaclr-controls
           .content
-            |paint lines to block the player, with a limited supply of paint. black kills, orange stuns, and blue slows
+            |paint lines to block the player, with a limited supply of paint. blue slows, yellow knocks back, and black kills
           .buttons
             #blackbuttonwrap
               #blackcounter
@@ -40,7 +41,26 @@ html
               #bluecounter
                 |78
               button#bluepaintbutton s
-            #orangebuttonwrap
-              #orangecounter
+            #yellowbuttonwrap
+              #yellowcounter
                 |100
-              button#orangepaintbutton d
+              button#yellowpaintbutton d
+
+    #game-start
+      h1.main-header
+        |obstacl<span class='r'>r</span>
+      #friendname
+        label
+          |if you are playing with a friend, enter your friend's name:
+        br
+        input(type="text", name="friendsName")
+        br
+        button#play PLAY NOW
+      #random
+        |otherwise, choose your role
+        br
+        .role MAPPER
+        .role PLAYER
+        br
+        button#match MATCH ME NOW
+
