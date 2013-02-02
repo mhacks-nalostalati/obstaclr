@@ -25,11 +25,11 @@ html
       h1.main-header
         |obstacl<span class='r'>r</span>
       canvas#canvas(width="1195", height="400")
-      #yolopage
+      .endofgamepage#yolopage
         #yolotext YOLO
         #losemessage 
           #losemessagetext
-            |player <span class='r'>r</span> dead. and you only live <span id=once>once</span>.
+            |player <span class='r'>r</span> dead. and you only live <span class=bluetext>once</span>.
           br
           button#switch SWITCH
           button#quit QUIT
@@ -53,6 +53,23 @@ html
               #yellowcounter
                 |100
               button#yellowpaintbutton d
+      .endofgamepage#winpage
+        #wintext YOU WIN
+        #winmessage 
+          #winmessagetext
+            |player <span class='r'>r</span> alive. <span class=bluetext>this time</span>.
+          br
+          button#switch SWITCH
+          button#quit QUIT
+      .endofgamepage#losepage
+        #losetext HE CAUGHT UP
+        #losemessage 
+          #losemessagetext
+            |player <span class='r'>r</span> alive. <span class=bluetext>you lose</span>.
+          br
+          button#switch SWITCH
+          button#quit QUIT
+
 
 
     #game-start
@@ -64,7 +81,7 @@ html
         br
         input(type="text", name="friendsName")
         br
-        button#play PLAY NOW
+        button#play PLAY 
         br
         br
       //#random

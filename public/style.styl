@@ -152,7 +152,8 @@ body
   margin-left: -600px
   background: white
 
-#yolopage
+.endofgamepage
+  display:none
   width: 1195px
   border-left:5px solid black
   height: 400px
@@ -164,17 +165,19 @@ body
   margin-left: -600px
   background: white
   z-index:1000;
-  #yolotext
+  #yolotext, #wintext, #losetext
     font-size:200px;
     text-align:center
     color: $orange
     margin: 20px 0 20px 0
-  #losemessage
+  #losetext
+    font-size:150px
+  #losemessage, #winmessage
     font-size:40px;
     text-align: center
     .r 
       color: $orange
-    #once 
+    .bluetext 
       color: $blue
     button
       background-color: #666
