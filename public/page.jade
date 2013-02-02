@@ -86,27 +86,25 @@ html
           button#newmatch NEW MATCH
           button#quit QUIT
 
-
-
     #game-start
       h1.main-header
         |obstacl<span class='r'>r</span>
+      #chooserole
+        |choose your role
+        .role#mapper MAPPER
+        .role#player PLAYER
       #friendname
         label
           |if you are playing with a friend, enter your friend's name:
         br
         input(type="text", name="friendsName")
         br
-        button#play PLAY 
+        button#play INVITE 
         br
         br
-      //#random
-      //|otherwise, choose your role
-      //br
-      //.role MAPPER
-      //.role PLAYER
-      //br
-      //button#match MATCH ME NOW
+      #random
+        |otherwise, find a match
+        button#match MATCH ME NOW
 
     label#playersInLobby
       span#lobbyCount| 0
