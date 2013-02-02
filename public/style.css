@@ -15,7 +15,7 @@ body{font-family:'Iceland',sans;font-size:100%;overflow:hidden;background-color:
 #name-entry button{background-color:#666;font-family:"Iceland";font-size:.9em;border:none;color:#fff;padding:3px}
 #name-entry button:hover{background-color:#333}
 #name-entry button:active{background-color:#bf5930}
-#game-start{display:none}
+#game-start{display:none;width:500px;margin:50px auto;background-color:#fff}
 .game-box{width:1000px;height:700px;background-color:#008000}
 .hidden-below{-webkit-transform:translate(0,1000px);-moz-transform:translate(0,1000px);-o-transform:translate(0,1000px);-ms-transform:translate(0,1000px);transform:translate(0,1000px)}
 .hidden-above{-webkit-transform:translate(0,-1000px);-moz-transform:translate(0,-1000px);-o-transform:translate(0,-1000px);-ms-transform:translate(0,-1000px);transform:translate(0,-1000px)}
