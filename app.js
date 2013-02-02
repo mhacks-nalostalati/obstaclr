@@ -17,16 +17,13 @@ function compile(str, path) {
 
 app.configure(function() {
   app.set('port', process.env.PORT || 3000);
-  app.set('views', __dirname + '/views');
-  app.set('view engine', 'jade');
   app.use(express.favicon());
-  app.use(express.bodyParser());
   app.use(app.router);
   app.set("view options", {layout: false});
   app.use(stylus.middleware({
     src: __dirname + '/public'
     , compile: compile}));
-  app.use(express.static(path.join(__dirname, 'public')));
+  app.use(express.static(__dirname + '/public'));
 });
 
 // Heroku won't actually allow us to use WebSockets
@@ -48,7 +45,7 @@ io.sockets.on('connection', function (socket) {
 });
 
 app.get('/', function(req, res){
-  res.sendFile("page.html");
+  res.sendfile("public/page.html");
 });
 
 server.listen(app.get('port'));
