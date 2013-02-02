@@ -1,3 +1,1 @@
-window.onload = function(){
-
-}
+var splashmenu =  $(".splash-menu");
