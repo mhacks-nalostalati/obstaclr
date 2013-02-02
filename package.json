@@ -2,11 +2,13 @@
   "name": "Obstclr",
   "author": "nalostalati",
   "version": "0.0.1",
-
+  "private": true,
   "dependencies": {
     "stylus": "0.32.0",
     "express": "3.1.0",
-    "node-gcm": "0.9.x"
+    "node-gcm": "0.9.3",
+    "socket.io": "0.9.13",
+    "nib": "0.9.1"
   },
 
   "repository": {
