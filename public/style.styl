@@ -1,20 +1,44 @@
-@import 'nib';
-@import url(http://fonts.googleapis.com/css?family=Iceland);
+@import 'nib'
+@import url(http://fonts.googleapis.com/css?family=Iceland)
 
+$blue = #0b61a4
+$darkblue = #25567b
+$darkerblue = #033e6b
+$lightblue = #3f92d2
+$lighterblue = #66a3d2
+
+$yellow = #ffbf00
+$darkyellow = #bf9b30
+$darkeryellow = #a67c00
+$lightyellow = #ffcf40
+$lighteryellow = #ffdc73
+
+$orange = #ff4900
+$darkorange = #bf5930
+$darkerorange = #a62f00
+$lightorange = #ff7640
+$lighterorange = #ff9b73
 
 global-reset();
 
 body
   font-family: 'Iceland', sans
   font-size: 100%
+  overflow:hidden
 
 
 .main-header
+  font-size: 4em
+  font-weight:bold
+  color: $blue
+  .r
+    color: $orange
 
 .splash-menu
   width: 500px
-  height:600px
-  background-color:red
+  height:400px
+  margin: 50px auto
+
 .game-box
   width: 1000px
   height: 700px

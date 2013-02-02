@@ -6,7 +6,7 @@ var app = express()
   , io = require('socket.io').listen(server)
   , stylus = require('stylus')
   , nib = require('nib')
-  , path = require('path')
+  , path = require('path');
 
 function compile(str, path) {
   return stylus(str)
@@ -22,6 +22,7 @@ app.configure(function() {
   app.use(express.favicon());
   app.use(express.bodyParser());
   app.use(app.router);
+  app.set("view options", {layout: false});
   app.use(stylus.middleware({
     src: __dirname + '/public'
     , compile: compile}));
@@ -47,7 +48,7 @@ io.sockets.on('connection', function (socket) {
 });
 
 app.get('/', function(req, res){
-  res.send('Hello World');
+  res.sendFile("page.html");
 });
 
 server.listen(app.get('port'));
