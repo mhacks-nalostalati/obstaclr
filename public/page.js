@@ -58,6 +58,26 @@ $(function() {
     gameStart.fadeIn('fast', function() {});
   });
 
+      $("#mapper").click(function(){
+        designation = 0;
+        $("#mapper").css("color", "#ff4900");
+        $("#player").css("color", "black");
+        
+    });
+
+    $("#player").click(function(){
+      designation = 1;
+      $("#player").css("color", "#ff4900");
+      $("#mapper").css("color", "black");
+    });
+
+    //when they click accept on the invite
+    $("#accept").click(function(){
+      $("#invitepage").hide();
+      gameplaySetup();
+      $("#accept").css("color", "#ff4900");
+    });
+
   //when they click the play button
   playButton.click(function() {
 
@@ -71,9 +91,6 @@ $(function() {
 
     if (vsName < name) var room = '/' + vsName + 'vs' + name;
     else var currentRoom = '/' + name + 'vs' + vsName;
-
-    designation = 0; //Currently defaulting to cartographer, 1 for player
-    //todo: set designation based on interface something
 
     socket.emit('gameStart', vsName, name, currentRoom, designation);
     window.history.pushState(null, currentRoom, currentRoom);
