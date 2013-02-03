@@ -187,6 +187,7 @@ $(function() {
     gameplaySetup();
   });
 
+
   //when the challenger recieves an acceptance back
   socket.on('accepted', function (vsName, room) {
     waitingPage.hide();
@@ -199,11 +200,11 @@ $(function() {
     gameplaySetup();
   })
 
-
   var gameplaySetup = function(){ 
     gamebox.show(); 
     createCanvas();
   }
+
 
   //remove from everyone's list if they close the window
   $(window).on('beforeunload', function(){
@@ -224,6 +225,10 @@ $(function() {
     else if (designation == 1){
       playerWinPage.show();
     }
+    quitButton.click(function(){
+      window.location = '/'
+      //splashMenu.show();
+     });
   }
   
   function obstaclrHasWon(){
@@ -233,12 +238,11 @@ $(function() {
     else if (designation == 1){
       playerLosePage.show();
     }
+    quitButton.click(function(){
+      window.location = '/'
+      //splashMenu.show();
+    });
   }
-''
-  quitButton.click(function(){
-    window.location = '/'
-    //splashMenu.show();
-  });
 
   socket.on('playerDeath', function() {
     obstaclrHasWon();
@@ -247,6 +251,7 @@ $(function() {
   socket.on('opponentQuit', function() {
     quitPage.show();
   })
+
 
   function createCanvas() {
     //actual gameplay shit goes here
