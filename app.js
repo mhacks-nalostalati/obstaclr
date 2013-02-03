@@ -1,13 +1,13 @@
 var express = require('express');
 
-var app = express()
-  , http = require('http')
-  , server = http.createServer(app)
-  , io = require('socket.io').listen(server)
-  , stylus = require('stylus')
-  , nib = require('nib')
-  , path = require('path')
-  , jade = require('jade')
+var app = express(),
+  http = require('http'),
+  server = http.createServer(app),
+  io = require('socket.io').listen(server),
+  stylus = require('stylus'),
+  nib = require('nib'),
+  path = require('path'),
+  jade = require('jade');
 
 function compile(str, path) {
   return stylus(str)
@@ -127,26 +127,22 @@ io.sockets.on('connection', function (socket) {
   //give current list on connection
   clients[socket.id] = socket;
   io.sockets.socket(socket.id).emit('fullList', playerlist);
-  console.log ("sent a list of " + playerlist.length + " players to " + socket.id);
 
   //when a player enters their name in the first window
   socket.on('newPlayer', function (name) {
     if (!(playerlist.indexOf(name) == -1)) {
-      console.log (name + " already exists, error from " + socket.id);
-      return;
+     return;
     }
 
     playerlist.push(name);
     clientlist.push(socket.id);
 
-    console.log (name + " added to list from " + socket.id);
     socket.broadcast.emit('addPlayer', name);
   });
 
   //when a player exits window or starts playing
   socket.on('playerGone', function (name) {
     if (playerlist.indexOf(name) == -1) {
-      console.log (name + " does not exist, error from " + socket.id);
       return;
     }
 
@@ -154,7 +150,6 @@ io.sockets.on('connection', function (socket) {
     playerlist.splice(position, 1);
     clientlist.splice(position, 1);
 
-    console.log (name + " removed from list from " + socket.id);
     socket.broadcast.emit('removePlayer', name);
   });
 
@@ -174,45 +169,50 @@ io.sockets.on('connection', function (socket) {
     playerlist.splice(position, 1);
     clientlist.splice(position, 1);
 
-    console.log (challenger + " removed from list with invite from " + socket.id);
     challengingPlayer.broadcast.emit('removePlayer', challenger);
     socket.broadcast.emit('removePlayer', acceptor);
     challengingPlayer.emit('accepted', acceptor, room)
 
     lines[room] = [];
     players[room] = new Point(10,200);
+    
     intervals[room] = setInterval (function() {
+
+      var myPlayer = players[room];
+
       if (lines[room]) {
         var i = lines[room].length;
         while (i--) {
-          var currentRect = lines[room];
-          currentRect.moveLeft(10);
-          if (myRect.collision(myPlayer)) {
-            if (myRect.baseLine.color < 0) myPlayer.x -= 0.3;
-            else if (myRect.baseLine.color > 0) myPlayer.x -= 0;
-            else io.sockets.in(room).emit('playerDeath');
+          if(lines[room][i]){
+            var currentRect = lines[room][i];
+            currentRect.moveLeft(0.5);
+            if (currentRect.collision(myPlayer)) {
+              if (currentRect.baseLine.color < 0) io.sockets.in(room).emit('playerDeath');
+              else if (currentRect.baseLine.color > 0) myPlayer.x -= 1;
+              else myPlayer.x -= 5;
+            }
           }
-          else myPlayer.x += 0.1; 
         }
       }
       
-      //console.log('emitting updateCanvas to room ' + room + ' with player at ' + players[room].x + ',' + players[room].y);
+      myPlayer.x += 0.1; 
+
       io.sockets.in(room).emit('updateCanvas', lines[room], players[room]);
 
-    }, 20)
+    }, 10);
 
   });
 
   socket.on('createLine', function(X1, X2, Y1, Y2, Color, currentRoom) {
-    var Point1 = new Point1(X1, Y1);
-    var Point1 = new Point2(X2, Y2);
+    var Point1 = new Point(X1, Y1);
+    var Point2 = new Point(X2, Y2);
     var thisLine = new Edge(Point1, Point2, Color);
-    var thisRect = new Rectangle(thisLine, halfWidth);
+    var thisRect = new Rectangle(thisLine, 7);
     lines[currentRoom].push(thisRect);
   });
 
   socket.on('playerPosition', function(x, y, currentRoom) {
-    players[CurrentRoom].x = x;
+    players[currentRoom].x = x;
     players[currentRoom].y = y;
   });
 
@@ -222,37 +222,10 @@ io.sockets.on('connection', function (socket) {
   
 });
 
-// var allRooms = io.sockets.manager.rooms;
-// allRooms = Object.keys(allRooms);
-// var i = allRooms.length;
-// while (i--) {
-//   setInterval (function() {
-//       if (lines.allRooms[i]) {
-//         var i = lines.allRooms[i].length;
-//         while (i--) {
-//           var currentRect = lines.allRooms[i][i];
-//           currentRect.moveLeft(10);
-//           if (myRect.collision(myPlayer)) {
-//             if (myRect.baseLine.color < 0) myPlayer.x -= 0.3;
-//             else if (myRect.baseLine.color > 0) myPlayer.x -= 0;
-//             else io.sockets.in(allRooms[i]).emit('playerDeath');
-//           }
-//           else myPlayer.x += 0.1; 
-//         }
-//       }
-      
-//       io.sockets.in(allRooms[i]).emit('updateCanvas', lines.allRooms[i], myPlayer);
-//   }, 20)
-// }
 
 app.get('/', function(req, res){
   res.render('page.jade');
 });
 
-// app.get('/:room', function(req, res){
-//   //join the right room for spectating 
-//   //socket.join(req.params.room)
-// })
 
 server.listen(app.get('port'));
-console.log('server now listening on port ' + app.get('port'));
