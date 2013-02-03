@@ -36,18 +36,21 @@ html
           |please select a role
       #friendname
         label
-          |if you are playing with a friend, enter your friend's name:
+          |enter your opponent's name
         br
         input(type="text", name="friendsName")
         br
         .validation#friendnamevalidation
-          |please enter your friend's name
+          |please enter your opponent's name
         button#play INVITE
  
       #random
-        |otherwise, find a match
+        |find a match
         br
         button#match MATCH ME NOW
+        #opponentmatch
+          |your match is: <span id=opponentname>opponentname</span>
+
     #invitepage
       | your friend <span id=name>name</span> has invited you to be a <span id=role>role</span>
       br
@@ -55,6 +58,8 @@ html
       button#decline DECLINE
     #waitmessage
       |waiting for your friend to accept your invite...
+    #noopponentmessage
+          |waiting for opponents...
 
 
     .game-box
@@ -101,9 +106,9 @@ html
           button#switch SWITCH
           button#quit QUIT
       .endofgamepage#losepage
-        #bigcaption HE CAUGHT UP
-        #messagebox 
-          #message
+        .bigcaption HE CAUGHT UP
+        .messagebox 
+          .message
             |player <span class='r'>r</span> alive. <span class=bluetext>you lose</span>.
           br
           button#switch SWITCH
