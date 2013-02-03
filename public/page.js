@@ -215,6 +215,10 @@ $(function() {
     }
   }
 
+  socket.on('playerDeath', function() {
+    obstaclrHasWon();
+  })
+
   socket.on('opponentQuit', function() {
     quitPage.show();
   })
