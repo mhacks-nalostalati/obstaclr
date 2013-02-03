@@ -271,7 +271,7 @@ $(function() {
     //actual gameplay shit goes here
     var ctx = $('#canvas')[0].getContext('2d');
     var playerImage = new Image();
-    playerImage.src = "shittyplayer.png";
+    playerImage.src = "player.png";
 
     //player
     function drawPlayer(x,y){
@@ -317,7 +317,7 @@ $(function() {
     if(designation > 0){
       var playerX = 10;
       var playerY = 200;
-      var playerDY = 10;
+      var playerDY = 5;
       upPressed = false;
       downPressed = false;
     
@@ -338,9 +338,11 @@ $(function() {
         }
         if(player.x < 10){
           obstaclrHasWon();
+          return;
         }
-        if(upPressed && !downPressed && playerY > 11) playerY = player.y - playerDY;
-        if(downPressed && !upPressed && playerY < 389) playerY = player.y +  playerDY;
+        //playerY = player.y;
+        if(upPressed && !downPressed && playerY > 1) playerY -= playerDY;
+        if(downPressed && !upPressed && playerY < 360) playerY +=  playerDY;
         if(playerY != player.y){
           socket.emit("playerPosition", player.x, playerY, currentRoom);
         }
@@ -351,7 +353,7 @@ $(function() {
         var currentline = null;
         while (length --){
           currentline = lines[length];
-          if(currentline.baseLine.point1.x < 0 && currentline.baseLine.point2.x < 0) break;
+          //if(currentline.baseLine.point1.x < 0 && currentline.baseLine.point2.x < 0) break;
           drawLine(ctx, coloriness[currentline.baseLine.color], currentline.baseLine.point1.x, currentline.baseLine.point1.y, currentline.baseLine.point2.x, currentline.baseLine.point2.y);
         }
       });
@@ -372,7 +374,7 @@ $(function() {
       setInterval(function(){
         if(paints["#444"] < 100){ paints["#444"] ++; blackcounter.html(paints["#444"])};
       }, 200);
-      var ymax = 200;
+      var ymax = 150;
       function selectColor(color){
         if(color < 0){
           //black as fuck
@@ -448,7 +450,7 @@ $(function() {
         if(length) lastlineposition = lines[length-1].baseLine.point1.x > lines[length-1].baseLine.point2.x ? lines[length-1].baseLine.point2.x : lines[length-1].baseLine.point1.x;
         while (length --){
           currentline = lines[length];
-          if(currentline.baseLine.point1.x < 0 && currentline.baseLine.point2.x < 0) break;
+          //if(currentline.baseLine.point1.x < 0 && currentline.baseLine.point2.x < 0) break;
           drawLine(ctx, coloriness[currentline.baseLine.color], currentline.baseLine.point1.x, currentline.baseLine.point1.y, currentline.baseLine.point2.x, currentline.baseLine.point2.y);
         }
       });
