@@ -220,7 +220,7 @@ $(function() {
     context.clearRect(0, 0, 1200, 400);
   }
 
-  if(true || isPlayer){
+  if(designation > 0){
     var playerDX = .1;
     var playerX = 10;
     var playerY = 200;
@@ -238,7 +238,25 @@ $(function() {
     }
     $(document).keydown(onKeyDown);
     $(document).keyup(onKeyUp);
-    var startTime = window.performance.now ? (performance.now() + performance.timing.navigationStart) : Date.now();
+    socket.on('updateCanvas', function(lines, player){
+      if(player.x > 590){
+        playerHasWon();
+        return;
+      }
+      if(player.x < 10){
+        obstaclrHasWon();
+      }
+      reqAnimFrame = window.mozRequestAnimationFrame    ||
+        window.webkitRequestAnimationFrame ||
+        window.msRequestAnimationFrame     ||
+        window.oRequestAnimationFrame;
+      reqAnimFrame(this);
+      if(upPressed && !downPressed && playerY > 11) playerY = player.y - playerDY;
+      if(downPressed && !upPressed && playerY < 389) playerY = player.y +  playerDY;
+      clear(ctx);
+      player(player.x, playerY);
+    });
+    /*
     function animate(timestamp){
       timestamp = timestamp || Date.now();
       if(playerX > 590){
@@ -262,8 +280,9 @@ $(function() {
       player(playerX, playerY);
     }
     animate();
+    */
   }
-  else if(false && isObstaclr){
+  else if(designation < 1){
     var drawzone = $("#drawzone");
     var drawctx = drawzone[0].getContext('2d');
     var lineStatus = { x1: 0, y2: 0, isStarted: false, color: "#000"};
@@ -310,7 +329,12 @@ $(function() {
       if(lineStatus.isStarted){
         var y = (Math.abs(e.offsetY - lineStatus.y1) < ymax) ? e.offsetY : lineStatus.y1 + ((e.offsetY - lineStatus.y1)/Math.abs(e.offsetY - lineStatus.y1))*ymax;
         clear(drawctx);
-        drawLine(ctx, lineStatus.color, lineStatus.x1 + 795, lineStatus.y1, e.offsetX + 795,y);
+        var color = -1;
+        //TODO: make sure there actually is enough paint!
+        if(lineStatus.color == "#0b61a4") color = 1;
+        if(lineStatus.color == "#ffbf00") color = 0;
+        socket.emit('createLine', lineStatus.x1 + 795, e.offsetX + 795, lineStatus.y1, y,color, currentRoom);
+        //drawLine(ctx, lineStatus.color, lineStatus.x1 + 795, lineStatus.y1, e.offsetX + 795,y);
         var length = Math.sqrt(Math.pow((e.offsetX - lineStatus.x1),2) + Math.pow((y - lineStatus.y1),2));
         paints[lineStatus.color] -= Math.floor(length/5);
         lineStatus.isStarted = false;
