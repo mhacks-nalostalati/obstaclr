@@ -29,9 +29,9 @@ $(function() {
   var obstaclrLosePage = $("#losepage");
   var quitPage = $("#quitpage");
   var nameValidation = $("#namevalidation");
-  var friendNameValidation = $("#friendnamevalidation");
   var newMatchButton = $("#newmatch");
   var roleValidation = $("#rolevalidation");
+  var friendNameValidation = $("#friendnamevalidation");
 
 
   //Populate list of current players on connection
@@ -66,7 +66,7 @@ $(function() {
     name = playerName.val();
     //validation to ensure user enters a name
     if (name == '' || typeof name =='undefined'){
-      nameValidation.css("display", "block");
+      nameValidation.show();
     }
     else {
       name = name.replace(/\s/g, "");
@@ -107,15 +107,15 @@ $(function() {
   playButton.click(function() {
     var vsName = friendsName.val().toLowerCase();
     friendsName.val(vsName);
-    if (fullPlayerList.indexOf(vsName) == -1) return;
-    
     //validation to ensure user chooses a role
-    if (typeof designation === undefined || designation === null || designation == -1){
-      roleValidation.show();
+    if (designation === 'null' || typeof designation === 'undefined' || designation == '-1'){
+      roleValidation.show(); 
+      return;
     }
 
-    else if (typeof vsName == undefined || vsName == '' || vsName == null){
+    else if (vsName == '' || typeof vsName =='undefined' || fullPlayerList.indexOf(vsName) == '-1'){
       friendNameValidation.show();
+      return;
     }
 
     if (vsName < name) currentRoom = vsName + 'vs' + name;
