@@ -121,8 +121,8 @@ app.configure(function() {
 // so we have to setup polling instead.
 // https://devcenter.heroku.com/articles/using-socket-io-with-node-js-on-heroku
 io.configure(function () {
-  io.set("transports", ["xhr-polling"]);
-  io.set("polling duration", 10);
+  // io.set("transports", ["xhr-polling"]);
+  // io.set("polling duration", 10);
   io.set('log level', 1);
 });
 
@@ -195,13 +195,12 @@ io.sockets.on('connection', function (socket) {
             var currentRect = lines[room][i];
             if (currentRect.isOffScreen()) {
               lines[room].splice(i,1);
-              console.log('line ' + i + ' spliced from array');
             }
             else {
-              currentRect.moveLeft(1.5);
+              currentRect.moveLeft(4);
               if (currentRect.collision(myPlayer)) {
                 if (currentRect.baseLine.color < 0) io.sockets.in(room).emit('playerDeath');
-                else if (currentRect.baseLine.color > 0) myPlayer.x -= 1.2;
+                else if (currentRect.baseLine.color > 0) myPlayer.x -= 2.3;
                 else myPlayer.x -= 7.5;
               }
             }
