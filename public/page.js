@@ -31,6 +31,7 @@ $(function() {
   var nameValidation = $("#namevalidation");
   var friendNameValidation = $("#friendnamevalidation");
   var newMatchButton = $("#newmatch");
+  var roleValidation = $("#rolevalidation");
 
 
   //Populate list of current players on connection
@@ -109,12 +110,12 @@ $(function() {
     if (fullPlayerList.indexOf(vsName) == -1) return;
     
     //validation to ensure user chooses a role
-    if (designation == undefined){
-      $("#rolevalidation").css("display", "block");
+    if (typeof designation == undefined || designation==''){
+      roleValidation.show();
     }
 
     else if (typeof vsName == undefined || vsName == '' || vsName == null){
-      friendNameValidation.css("display", "block");
+      friendNameValidation.show();
     }
 
     socket.emit('invitePlayer', vsName, name, currentRoom, designation);
