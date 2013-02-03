@@ -244,14 +244,19 @@ $(function() {
   function createCanvas() {
     //actual gameplay shit goes here
     var ctx = $('#canvas')[0].getContext('2d');
+    var playerImage = new Image();
+    playerImage.src = "shittyplayer.png";
 
     //player
     function drawPlayer(x,y){
+      /*
       ctx.fillStyle = "#ff4900";
       ctx.beginPath();
       ctx.arc(x,y,10,0,Math.PI*2, true);
       ctx.closePath();
       ctx.fill();
+      */
+      ctx.drawImage(playerImage, x, y, 31, 40);
     }
     function drawLineNode(context, color, x, y){
       context.fillStyle = color;
@@ -279,7 +284,7 @@ $(function() {
     if(designation > 0){
       var playerX = 10;
       var playerY = 200;
-      var playerDY = 5;
+      var playerDY = 10;
       upPressed = false;
       downPressed = false;
     
@@ -309,7 +314,7 @@ $(function() {
         clear(ctx);
         drawPlayer(player.x, playerY);
         var length = lines.length;
-        var coloriness = {'0': "#ffbf00", '1': "#0b61a4", '-1': "#000"};
+        var coloriness = {'0': "#ffbf00", '1': "#0b61a4", '-1': "#444"};
         var currentline = null;
         while (length --){
           currentline = lines[length];
@@ -322,8 +327,8 @@ $(function() {
     else if(designation < 1){
       var drawzone = $("#drawzone");
       var drawctx = drawzone[0].getContext('2d');
-      var lineStatus = { x1: 0, y2: 0, isStarted: false, color: "#000"};
-      var paints = {"#000": 100, "#0b61a4": 100, "#ffbf00": 100};
+      var lineStatus = { x1: 0, y2: 0, isStarted: false, color: "#444"};
+      var paints = {"#444": 100, "#0b61a4": 100, "#ffbf00": 100};
       var bluecounter = $('#bluecounter');
       var yellowcounter = $('#yellowcounter');
       setInterval(function(){
@@ -332,13 +337,13 @@ $(function() {
       }, 100);
       var blackcounter = $("#blackcounter");
       setInterval(function(){
-        if(paints["#000"] < 100){ paints["#000"] ++; blackcounter.html(paints["#000"])};
+        if(paints["#444"] < 100){ paints["#444"] ++; blackcounter.html(paints["#444"])};
       }, 200);
       var ymax = 200;
       function selectColor(color){
         if(color < 0){
           //black as fuck
-          lineStatus.color = '#000';
+          lineStatus.color = '#444';
           $(".buttons button").removeClass('selected');
           $('#blackpaintbutton').addClass('selected');
         }
@@ -367,12 +372,12 @@ $(function() {
         if(lastlineposition > 800) return;
         if(lineStatus.isStarted){
           var y = (Math.abs(e.offsetY - lineStatus.y1) < ymax) ? e.offsetY : lineStatus.y1 + ((e.offsetY - lineStatus.y1)/Math.abs(e.offsetY - lineStatus.y1))*ymax;
-          clear(drawctx);
           var color = -1;
           if(lineStatus.color == "#0b61a4") color = 1;
           if(lineStatus.color == "#ffbf00") color = 0;
           var length = Math.sqrt(Math.pow((e.offsetX - lineStatus.x1),2) + Math.pow((y - lineStatus.y1),2));
           if(paints[lineStatus.color] > Math.floor(length/3)){
+            clear(drawctx);
             socket.emit('createLine', lineStatus.x1 + 795, e.offsetX + 795, lineStatus.y1, y,color, currentRoom);
             paints[lineStatus.color] -= Math.floor(length/3);
             lineStatus.isStarted = false;
@@ -402,7 +407,7 @@ $(function() {
         clear(ctx);
         drawPlayer(player.x, player.y);
         var length = lines.length;
-        var coloriness = {'0': "#ffbf00", '1': "#0b61a4", '-1': "#000"};
+        var coloriness = {'0': "#ffbf00", '1': "#0b61a4", '-1': "#444"};
         var currentline = null;
         if(length) lastlineposition = lines[length-1].baseLine.point1.x > lines[length-1].baseLine.point2.x ? lines[length-1].baseLine.point2.x : lines[length-1].baseLine.point1.x;
         while (length --){
