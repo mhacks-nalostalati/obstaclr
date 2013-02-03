@@ -102,7 +102,7 @@ $(function() {
       $("#friendnamevalidation").css("display", "block");
     }
 
-    socket.emit('invite')
+    socket.emit('invitePlayer', vsName, name, currentRoom, designation)
 
   });
 
@@ -185,10 +185,20 @@ $(function() {
   });
 
   function playerHasWon(){
-
+    if (designation == 0){
+      $("#losepage").show();
+    }
+    else if (designation == 1){
+      $("#playerwinpage").show();
+    }
   }
   function obstaclrHasWon(){
-
+    if (designation == 0){
+      $("#obstaclrwinpage").show();
+    }
+    else if (designation == 1){
+      $("#yolopage").show();
+    }
   }
 
   //actual gameplay shit goes here
