@@ -15,3 +15,5 @@ npm-debug.log
 *.swp
 *.swo
 node_modules
+
+/public/style.css
