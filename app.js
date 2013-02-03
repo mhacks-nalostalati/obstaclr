@@ -83,8 +83,11 @@ Rectangle.prototype.moveLeft = function(left) {
 Rectangle.prototype.collision = function(ballPoint) {
   var x = ballPoint.x;
   var y = ballPoint.y;
-  console.log(this.edge1.relativeX(x, y) + ', ' + this.edge2.relativeX(x, y) + ', ' + this.edge3.relativeX(x, y) + ', ' + this.edge4.relativeX(x, y));
-  if (this.edge1.relativeX(x, y) + this.edge2.relativeX(x, y) + this.edge3.relativeX(x, y) + this.edge4.relativeX(x, y) == -10)
+  if (this.edge1.relativeX(x, y) + this.edge2.relativeX(x, y) + this.edge3.relativeX(x, y) + this.edge4.relativeX(x, y) == -10 ||
+    this.edge1.relativeX(x, y) == 0 || //touching
+    this.edge2.relativeX(x, y) == 0 || //touching
+    this.edge3.relativeX(x, y) == 0 || //touching
+    this.edge4.relativeX(x, y) == 0)   //touching
     return true;
   else return false;
 }
@@ -116,6 +119,7 @@ var clientlist = [];
 var clients = {};
 
 var lines = {};
+var players = {};
 
 io.sockets.on('connection', function (socket) {
   
@@ -187,32 +191,39 @@ io.sockets.on('connection', function (socket) {
   });
 
   socket.on('playerPosition', function(x, y, currentRoom) {
-    var myPlayer = new Point(x,y);
-    if (lines.currentRoom) {
-      var i = lines.currentRoom.length;
-      while (i--) {
-        var currentRect = lines.currentRoom[i];
-        currentRect.moveLeft(10);
-        if (myRect.collision(myPlayer)) {
-          if (myRect.baseLine.color < 0) console.log('collision with color -1');
-          else if (myRect.baseLine.color > 0) console.log('collision with color 1');
-          else console.log('collision with color 0');
-        }
-        else console.log('not a collision'); 
-      }
-    }
-
-    myPlayer.x += 0.1;
-    io.sockets.in(currentRoom).emit('updateCanvas', lines.currentRoom, myPlayer);
-
+    if (!players.currentRoom) players.currentRoom = new Point(x,y);
+    //players.CurrentRoom.x = x;
+    players.currentRoom.y = y;
   });
 
   socket.on('playerExit', function(currentRoom) {
     socket.broadcast.to(currentRoom).emit('opponentQuit');
   });
-     
-
+  
 });
+
+var allRooms = io.sockets.manager.rooms;
+allRooms = Object.keys(allRooms);
+var i = allRooms.length;
+while (i--) {
+  setTimeout (function() {
+      if (lines.allRooms[i]) {
+        var i = lines.allRooms[i].length;
+        while (i--) {
+          var currentRect = lines.allRooms[i][i];
+          currentRect.moveLeft(10);
+          if (myRect.collision(myPlayer)) {
+            if (myRect.baseLine.color < 0) myPlayer.x -= 0.3;
+            else if (myRect.baseLine.color > 0) myPlayer.x -= 0;
+            else io.sockets.in(allRooms[i]).emit('playerDeath');
+          }
+          else myPlayer.x += 0.1; 
+        }
+      }
+      
+      io.sockets.in(allRooms[i]).emit('updateCanvas', lines.allRooms[i], myPlayer);
+  }, 20)
+}
 
 app.get('/', function(req, res){
   res.render('page.jade');

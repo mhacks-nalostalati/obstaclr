@@ -185,6 +185,7 @@ $(function() {
       $("#playerwinpage").show();
     }
   }
+  
   function obstaclrHasWon(){
     if (designation == 0){
       $("#obstaclrwinpage").show();
