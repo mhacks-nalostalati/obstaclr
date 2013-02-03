@@ -306,6 +306,13 @@ $(function() {
       context.clearRect(0, 0, 1200, 400);
     }
 
+    var colorNames = {'#ffbf00': "yellow", '#0b61a4': "blue", '#444': "black"};
+    function errorOutline(whichButton){
+      var errorbutton = $('#' + colorNames[whichButton] + 'paintbutton');
+      errorbutton.addClass('outtaPaint');
+      setTimeout(function() {errorbutton.removeClass('outtaPaint');}, 500);
+    }
+
     drawPlayer(10,200);
     if(designation > 0){
       var playerX = 10;
@@ -407,6 +414,9 @@ $(function() {
             socket.emit('createLine', lineStatus.x1 + 795, e.offsetX + 795, lineStatus.y1, y,color, currentRoom);
             paints[lineStatus.color] -= Math.floor(length/3);
             lineStatus.isStarted = false;
+          }
+          else{
+            errorOutline(lineStatus.color);
           }
         }
         else{
