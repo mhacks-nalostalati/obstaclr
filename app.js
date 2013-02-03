@@ -32,17 +32,21 @@ var Edge = function(Point1, Point2, Color) {
 }
 
 Edge.prototype.inY = function(yPos) {
-  if (yPos > this.point1.y && yPos < this.point2.y || yPos < this.point1.y && yPos > this.point2.y)
-    return 1;
-  else return 0;
+  if ((yPos > (this.point1.y-2) && yPos < (this.point2.y+2)) || (yPos < (this.point1.y+2) && yPos > (this.point2.y-2))) return true;
+  return false;
+}
+
+Edge.prototype.inX = function(xPos) {
+  if ((xPos > (this.point1.x - 2)  && xPos < (this.point2.x + 2)) || (xPos < (this.point1.x + 2) && xPos > (this.point2.x - 2))) return true;
+  return false;
 }
 
 Edge.prototype.relativeX = function(xPos, yPos) {
-  if (this.inY(yPos) == 1) {
-    var lineXPos = (yPos - this.point1.y)*(this.run)/(this.rise) + this.point1.x;
-    if (xPos > lineXPos) return 1;
-    else if (xPos < lineXPos) return -1;
-    else if (xPos == lineXPos) return 0;
+  if (this.inY(yPos) && this.inX(xPos)) {
+    var distance = xPos - ((yPos - this.point1.y)*(this.run)/(this.rise) + this.point1.x);
+    if (distance < -2) return -1;
+    else if (distance > 2) return 1;
+    return 0;
   }
   else return -5;
 }
@@ -81,15 +85,18 @@ Rectangle.prototype.moveLeft = function(left) {
 }
 
 Rectangle.prototype.collision = function(ballPoint) {
+
   var x = ballPoint.x;
   var y = ballPoint.y;
-  if (this.edge1.relativeX(x, y) + this.edge2.relativeX(x, y) + this.edge3.relativeX(x, y) + this.edge4.relativeX(x, y) == -10 ||
-    this.edge1.relativeX(x, y) == 0 || //touching
-    this.edge2.relativeX(x, y) == 0 || //touching
-    this.edge3.relativeX(x, y) == 0 || //touching
-    this.edge4.relativeX(x, y) == 0)   //touching
-    return true;
-  else return false;
+
+  var pos1 = this.edge1.relativeX(x, y),
+      pos2 = this.edge2.relativeX(x, y),
+      pos3 = this.edge3.relativeX(x, y),
+      pos4 = this.edge4.relativeX(x, y),
+      product = pos1*pos2*pos3*pos4;
+
+  if (product === 0 || product === 25) return true;
+  return false;
 }
 
 app.configure(function() {
@@ -109,8 +116,8 @@ app.configure(function() {
 // so we have to setup polling instead.
 // https://devcenter.heroku.com/articles/using-socket-io-with-node-js-on-heroku
 io.configure(function () {
-  io.set("transports", ["xhr-polling"]);
-  io.set("polling duration", 10);
+  // io.set("transports", ["xhr-polling"]);
+  // io.set("polling duration", 10);
   io.set('log level', 1);
 });
 
@@ -130,27 +137,23 @@ io.sockets.on('connection', function (socket) {
 
   //when a player enters their name in the first window
   socket.on('newPlayer', function (name) {
-    if (!(playerlist.indexOf(name) == -1)) {
-     return;
-    }
+    if (!(playerlist.indexOf(name) == -1)) return;
 
     playerlist.push(name);
     clientlist.push(socket.id);
-
     socket.broadcast.emit('addPlayer', name);
+
   });
 
   //when a player exits window or starts playing
   socket.on('playerGone', function (name) {
-    if (playerlist.indexOf(name) == -1) {
-      return;
-    }
+    if (playerlist.indexOf(name) == -1) return;
 
     var position = playerlist.indexOf(name);
     playerlist.splice(position, 1);
     clientlist.splice(position, 1);
-
     socket.broadcast.emit('removePlayer', name);
+
   });
 
   socket.on('invitePlayer', function (opponent, challenger, room, designation) {
@@ -185,21 +188,20 @@ io.sockets.on('connection', function (socket) {
         while (i--) {
           if(lines[room][i]){
             var currentRect = lines[room][i];
-            currentRect.moveLeft(0.5);
+            currentRect.moveLeft(1.5);
             if (currentRect.collision(myPlayer)) {
               if (currentRect.baseLine.color < 0) io.sockets.in(room).emit('playerDeath');
-              else if (currentRect.baseLine.color > 0) myPlayer.x -= 1;
-              else myPlayer.x -= 5;
+              else if (currentRect.baseLine.color > 0) myPlayer.x -= 1.2;
+              else myPlayer.x -= 7.5;
             }
           }
         }
       }
       
-      myPlayer.x += 0.1; 
-
+      myPlayer.x += 0.3; 
       io.sockets.in(room).emit('updateCanvas', lines[room], players[room]);
 
-    }, 10);
+    }, 30);
 
   });
 
@@ -226,6 +228,5 @@ io.sockets.on('connection', function (socket) {
 app.get('/', function(req, res){
   res.render('page.jade');
 });
-
 
 server.listen(app.get('port'));
