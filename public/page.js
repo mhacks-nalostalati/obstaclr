@@ -327,7 +327,7 @@ $(function() {
         var currentline = null;
         while (length --){
           currentline = lines[length];
-          if(currentline.baseLine.point1.x < 0 && currentline.baseLine.point2.x < 0) break;
+          //if(currentline.baseLine.point1.x < 0 && currentline.baseLine.point2.x < 0) break;
           drawLine(ctx, coloriness[currentline.baseLine.color], currentline.baseLine.point1.x, currentline.baseLine.point1.y, currentline.baseLine.point2.x, currentline.baseLine.point2.y);
         }
       });
@@ -421,7 +421,7 @@ $(function() {
         if(length) lastlineposition = lines[length-1].baseLine.point1.x > lines[length-1].baseLine.point2.x ? lines[length-1].baseLine.point2.x : lines[length-1].baseLine.point1.x;
         while (length --){
           currentline = lines[length];
-          if(currentline.baseLine.point1.x < 0 && currentline.baseLine.point2.x < 0) break;
+          //if(currentline.baseLine.point1.x < 0 && currentline.baseLine.point2.x < 0) break;
           drawLine(ctx, coloriness[currentline.baseLine.color], currentline.baseLine.point1.x, currentline.baseLine.point1.y, currentline.baseLine.point2.x, currentline.baseLine.point2.y);
         }
       });
