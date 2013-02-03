@@ -15,6 +15,79 @@ function compile(str, path) {
     .set('compress', true)
     .use(nib());
 }
+  
+var Point = function(X, Y) {
+  this.x = X;
+  this.y = Y;
+}
+
+var Edge = function(Point1, Point2, Color) {
+  this.point1 = Point1;
+  this.point2 = Point2;
+  this.color = Color;
+
+  this.run = (this.point2.x-this.point1.x);
+  this.rise = (this.point2.y-this.point1.y);
+  this.theta = Math.atan2(this.rise,this.run);
+}
+
+Edge.prototype.inY = function(yPos) {
+  if (yPos > this.point1.y && yPos < this.point2.y || yPos < this.point1.y && yPos > this.point2.y)
+    return 1;
+  else return 0;
+}
+
+Edge.prototype.relativeX = function(xPos, yPos) {
+  if (this.inY(yPos) == 1) {
+    var lineXPos = (yPos - this.point1.y)*(this.run)/(this.rise) + this.point1.x;
+    if (xPos > lineXPos) return 1;
+    else if (xPos < lineXPos) return -1;
+    else if (xPos == lineXPos) return 0;
+  }
+  else return -5;
+}
+
+var Rectangle = function(line, Width) {
+  this.baseLine = line;
+  this.width = Width;
+  this.rectFromLine();
+}
+
+Rectangle.prototype.rectFromLine = function() {
+  X1 = parseFloat(this.baseLine.point1.x);
+  Y1 = parseFloat(this.baseLine.point1.y);
+  X2 = parseFloat(this.baseLine.point2.x);
+  Y2 = parseFloat(this.baseLine.point2.y);
+  halfWidth = parseFloat(this.width);
+
+  var fatX = halfWidth*Math.sin(this.baseLine.theta);
+  var fatY = halfWidth*Math.cos(this.baseLine.theta);
+
+  this.rect1 = new Point((X1 - fatX),(Y1 + fatY));
+  this.rect2 = new Point((X1 + fatX),(Y1 - fatY));
+  this.rect3 = new Point((X2 + fatX),(Y2 - fatY));
+  this.rect4 = new Point((X2 - fatX),(Y2 + fatY));
+
+  this.edge1 = new Edge(this.rect1, this.rect2, null);
+  this.edge2 = new Edge(this.rect2, this.rect3, null);
+  this.edge3 = new Edge(this.rect3, this.rect4, null);
+  this.edge4 = new Edge(this.rect4, this.rect1, null);
+}
+
+Rectangle.prototype.moveLeft = function(left) {
+  this.baseLine.point1.x -= left;
+  this.baseLine.point2.x -= left;
+  this.rectFromLine();
+}
+
+Rectangle.prototype.collision = function(ballPoint) {
+  var x = ballPoint.x;
+  var y = ballPoint.y;
+  console.log(this.edge1.relativeX(x, y) + ', ' + this.edge2.relativeX(x, y) + ', ' + this.edge3.relativeX(x, y) + ', ' + this.edge4.relativeX(x, y));
+  if (this.edge1.relativeX(x, y) + this.edge2.relativeX(x, y) + this.edge3.relativeX(x, y) + this.edge4.relativeX(x, y) == -10)
+    return true;
+  else return false;
+}
 
 app.configure(function() {
   app.set('port', process.env.PORT || 3000);
@@ -96,37 +169,34 @@ io.sockets.on('connection', function (socket) {
   });
 
   socket.on('createLine', function(X1, X2, Y1, Y2, Color, currentRoom) {
-
-    //possibleTodo: check if line is valid under rules
+    var Point1 = new Point1(X1, Y1);
+    var Point1 = new Point2(X2, Y2);
+    var thisLine = new Edge(Point1, Point2, Color);
+    var thisRect = new Rectangle(thisLine, halfWidth);
 
     if (!lines.currentRoom) lines.currentRoom = [];
-
-    run = Math.abs(X2-X1);
-    rise = Math.abs(Y2-Y1);
-    var theta = (run)? Math.tan(rise/run) : Math.PI/2;
-
-    var thisLine = {
-      x1: X1, 
-      x2: X2, 
-      y1: Y1, 
-      y2: Y2, 
-      dx: run,
-      dy: rise,
-      fatX: (dx/dy),
-      fatY: (dy/dx),
-      color: Color
-    }
-
-    lines.currentRoom.push(thisLine);
-
+    lines.currentRoom.push(thisRect);
   });
 
   socket.on('playerPosition', function(x, y, currentRoom) {
-    //move each line one in the x position
-    //crash detection of player with lines
-    //give back position of player and every line
-    socket.emit('playerPositioned', x, y); //for everyone but player
-    io.sockets.in(currentRoom).emit('lineCreated', x1, x2, y1, y2, color);
+    var myPlayer = new Point(x,y);
+    if (lines.currentRoom) {
+      var i = lines.currentRoom.length;
+      while (i--) {
+        var currentRect = lines.currentRoom[i];
+        currentRect.moveLeft(10);
+        if (myRect.collision(myPlayer)) {
+          if (myRect.baseLine.color < 0) console.log('collision with color -1');
+          else if (myRect.baseLine.color > 0) console.log('collision with color 1');
+          else console.log('collision with color 0');
+        }
+        else console.log('not a collision'); 
+      }
+    }
+
+    myPlayer.x += 0.1;
+    io.sockets.in(currentRoom).emit('updateCanvas', lines.currentRoom, myPlayer);
+
   });
 
   socket.on('playerExit', function(currentRoom) {
