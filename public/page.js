@@ -80,17 +80,17 @@ $(function() {
   });
 
     //when user selects role of player
-    $("#player").click(function(){
+    player.click(function(){
       designation = 1;
-      $("#player").css("color", "#ff4900");
-      $("#mapper").css("color", "black");
+      player.css("color", "#ff4900");
+      obstaclr.css("color", "black");
     });
 
     //when they click accept on the invite
-    $("#accept").click(function(){
-      $("#invitepage").hide();
+    acceptButton.click(function(){
+      invitePage.hide();
       gameplaySetup();
-      $("#accept").css("color", "#ff4900");
+      acceptButton.css("color", "#ff4900");
     });
 
   //when they click the play button
