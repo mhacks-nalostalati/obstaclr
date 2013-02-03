@@ -20,7 +20,7 @@ $(function() {
   var playerBox = $('#player');
   var acceptButton = $("#accept");
   var declineButton = $("#decline");
-  var invitePage = $("#invitepage");
+  var invitePage = $(".invitepage");
   var nameBox = $("#name");
   var roleBox = $("#role");
   var playerWinPage = $("#playerwinpage");
@@ -57,6 +57,10 @@ $(function() {
     friendsName.autocomplete({
       source: fullPlayerList
     });
+    if (noOpponentMessage.is(':visible')) {
+      noOpponentMessage.hide();
+      gameStart.show();
+    }
   });
 
   //remove from list everytime a player leaves
@@ -66,6 +70,10 @@ $(function() {
     friendsName.autocomplete({
       source: fullPlayerList
     });
+    if (fullPlayerList.length === 0 && gameStart.is(':visible')) {
+      noOpponentMessage.show();
+      gameStart.hide();
+    }
   });
 
   //format and add the name when they come in
@@ -108,13 +116,6 @@ $(function() {
     obstaclr.css("color", "black");
   });
 
-  //when they click accept on the invite
-  acceptButton.click(function(){
-    invitePage.hide();
-    gameplaySetup();
-    acceptButton.css("color", "#ff4900");
-  });
-
   //when they click the play button
   playButton.click(function() {
     var vsName = friendsName.val().toLowerCase();
@@ -135,6 +136,8 @@ $(function() {
 
     socket.emit('invitePlayer', vsName, name, currentRoom, designation);
     gameStart.hide();
+
+    $('#waitName').text(vsName);
     waitingPage.show();
   });
 
@@ -147,8 +150,7 @@ $(function() {
    });
 
   declineButton.click(function() {
-    invitePage.hide();
-    gameStart.show();
+    $(this).parent().hide();
   });
 
   newMatchButton.click(function() {
@@ -157,34 +159,46 @@ $(function() {
   });
 
   socket.on('invite', function (challenger, room, myDesignation) {
-    designation = myDesignation; //designation 0 for cartographer, 1 for player
-    currentRoom = room; //sets the global room to send with each request, quicker than a hash lookup
-
-    gameStart.hide();
+    //gameStart.hide();
  
-    invitePage.show();
-    var replacename = nameBox.html().replace("name", challenger);
-    nameBox.html(replacename);
+    var thisInvite = $(invitePage.clone(true));
+    thisInvite.attr('id','invite' + challenger);
+    $(thisInvite.find('#name')[0]).html(challenger);
+    thisInvite.attr('room', room);
     
     var role;
-    if (designation == 1) role = "player";
+    if (myDesignation == 1) role = "player";
     else role = "obstaclr";
 
-    var replacerole = roleBox.html().replace("role", role);
-    roleBox.html(replacerole);
+    $(thisInvite.find('#role')[0]).html(role);
+
+    thisInvite.appendTo(gameStart).show();
     
   });
 
   //when they click accept on the invite
   acceptButton.click(function(){
-    invitePage.hide();
-    acceptButton.css("color", "#ff4900");
+
+    gameStart.hide();
+    var currentButton = $(this);
+    var currentOpponent = $(currentButton.parent().find('#name')[0]).html();
+    var currentRole = $(currentButton.parent().find('#role')[0]).html();
+    currentRoom = currentButton.parent().attr('room');
+
+    if (currentRole == "obstaclr") designation = 0;
+    else designation = 1;
+
+    $('.invitepage').each(function () {$(this).hide()});
+
+    currentButton.css("color", "#ff4900");
     window.history.pushState(null, currentRoom, '/' + currentRoom);
     playersInLobby.remove();
     socket.removeAllListeners("addPlayer");
     socket.removeAllListeners("removePlayer");
-    socket.emit('playerAccepts', name, nameBox.html(), currentRoom)
+    socket.emit('playerAccepts', name, currentOpponent, currentRoom);
+    playersInLobby.hide();
     gameplaySetup();
+
   });
 
 

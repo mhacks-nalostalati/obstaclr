@@ -78,6 +78,11 @@ Rectangle.prototype.rectFromLine = function() {
   this.edge4 = new Edge(this.rect4, this.rect1, null);
 }
 
+Rectangle.prototype.isOffScreen = function() {
+  if (this.baseLine.point1.x < 0 && this.baseLine.point2.x < 0) return true;
+  return false;
+}
+
 Rectangle.prototype.moveLeft = function(left) {
   this.baseLine.point1.x -= left;
   this.baseLine.point2.x -= left;
@@ -116,8 +121,8 @@ app.configure(function() {
 // so we have to setup polling instead.
 // https://devcenter.heroku.com/articles/using-socket-io-with-node-js-on-heroku
 io.configure(function () {
-  // io.set("transports", ["xhr-polling"]);
-  // io.set("polling duration", 10);
+  io.set("transports", ["xhr-polling"]);
+  io.set("polling duration", 10);
   io.set('log level', 1);
 });
 
@@ -188,11 +193,14 @@ io.sockets.on('connection', function (socket) {
         while (i--) {
           if(lines[room][i]){
             var currentRect = lines[room][i];
-            currentRect.moveLeft(1.5);
-            if (currentRect.collision(myPlayer)) {
-              if (currentRect.baseLine.color < 0) io.sockets.in(room).emit('playerDeath');
-              else if (currentRect.baseLine.color > 0) myPlayer.x -= 1.2;
-              else myPlayer.x -= 7.5;
+            if (currentRect.isOffScreen) {lines[room].splice(i,1)}
+            else {
+              currentRect.moveLeft(1.5);
+              if (currentRect.collision(myPlayer)) {
+                if (currentRect.baseLine.color < 0) io.sockets.in(room).emit('playerDeath');
+                else if (currentRect.baseLine.color > 0) myPlayer.x -= 1.2;
+                else myPlayer.x -= 7.5;
+              }
             }
           }
         }
