@@ -91,8 +91,8 @@ Rectangle.prototype.moveLeft = function(left) {
 
 Rectangle.prototype.collision = function(ballPoint) {
 
-  var x = ballPoint.x;
-  var y = ballPoint.y;
+  var x = ballPoint.x + 18;
+  var y = ballPoint.y + 20;
 
   var pos1 = this.edge1.relativeX(x, y),
       pos2 = this.edge2.relativeX(x, y),
@@ -193,7 +193,10 @@ io.sockets.on('connection', function (socket) {
         while (i--) {
           if(lines[room][i]){
             var currentRect = lines[room][i];
-            if (currentRect.isOffScreen) {lines[room].splice(i,1)}
+            if (currentRect.isOffScreen()) {
+              lines[room].splice(i,1);
+              console.log('line ' + i + ' spliced from array');
+            }
             else {
               currentRect.moveLeft(1.5);
               if (currentRect.collision(myPlayer)) {
