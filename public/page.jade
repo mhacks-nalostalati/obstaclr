@@ -51,15 +51,15 @@ html
         #opponentmatch
           |your match is: <span id=opponentname>opponentname</span>
 
-    #invitepage
+    .invitepage
       | your friend <span id=name>name</span> has invited you to be a <span id=role>role</span>
       br
       button#accept ACCEPT
       button#decline DECLINE
     #waitmessage
-      |waiting for your friend to accept your invite...
+      |waiting for <span id=waitName>name</span> to accept your invite...
     #noopponentmessage
-          |waiting for opponents...
+      |waiting for opponents, ask your friends to come online...
 
 
     .game-box
