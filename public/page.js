@@ -32,7 +32,12 @@ $(function() {
   var newMatchButton = $("#newmatch");
   var roleValidation = $("#rolevalidation");
   var friendNameValidation = $("#friendnamevalidation");
+  var matchButton = $("#match");
+  var noOpponentMessage = $("#noopponentmessage");
+  var opponentMatch = $("#opponentmatch");
+  var opponentName = $("#opponentname");
 
+  playerName.focus();
 
   //Populate list of current players on connection
   socket.on('fullList', function (playerList) {
@@ -76,9 +81,14 @@ $(function() {
         nextButton.prev().prev().prev().prev().text('Taken, try again');
         return;
       }
-    socket.emit('newPlayer', name);
-    splashMenu.remove();
-    gameStart.show();
+      socket.emit('newPlayer', name);
+      splashMenu.remove();
+      if (fullPlayerList.length == 0){
+        noOpponentMessage.show();
+      }
+      else{
+        gameStart.show();
+      }
     }
   });
 
@@ -125,6 +135,14 @@ $(function() {
     gameStart.hide();
     waitingPage.show();
   });
+
+  matchButton.click(function() {
+    var randomOpponent = fullPlayerList[Math.floor(Math.random()*fullPlayerList.length)];
+    //var replaceOpponentName = opponentMatch.html().replace("opponentname", randomOpponent);
+    //opponentMatch.html().replace(replaceOpponentName);
+    var replaceOpponentName = opponentName.html(randomOpponent);
+    opponentMatch.show();
+   });
 
   declineButton.click(function() {
     invitePage.hide();
@@ -185,16 +203,16 @@ $(function() {
   }
 
   //remove from everyone's list if they close the window
-  // $(window).on('beforeunload', function(){
-  //   if (gamebox.is(":visible")) {
-  //     socket.emit('playerExit', currentRoom);
-  //     return name + ', you have left the game';
-  //   }
-  //   else if (name) {
-  //     socket.emit('playerGone', name);
-  //     return name + ', we are sorry to see you go';
-  //   }
-  // });
+  $(window).on('beforeunload', function(){
+    if (gamebox.is(":visible")) {
+      socket.emit('playerExit', currentRoom);
+      return name + ', you have left the game';
+    }
+    else if (name) {
+      socket.emit('playerGone', name);
+      return name + ', we are sorry to see you go';
+    }
+  });
 
   function playerHasWon(){
     if (designation == 0){
