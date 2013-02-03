@@ -153,19 +153,27 @@ io.sockets.on('connection', function (socket) {
     socket.broadcast.emit('removePlayer', name);
   });
 
-  socket.on('gameStart', function (opponent, challenger, room, designation) {
+  socket.on('invitePlayer', function (opponent, challenger, room, designation) {
     var position = playerlist.indexOf(opponent);
     var invitee = clients[clientlist[position]];
     invitee.emit('invite', challenger, room, (1 - designation));
+  });
+
+  socket.on('playerAccepts', function (acceptor, challenger, room) {
+    var position = playerlist.indexOf(challenger);
+    var challengingPlayer = clients[clientlist[position]];
 
     socket.join(room);
-    invitee.join(room);
+    challengingPlayer.join(room);
 
     playerlist.splice(position, 1);
     clientlist.splice(position, 1);
 
-    console.log (opponent + " removed from list with invite from " + socket.id);
-    invitee.broadcast.emit('removePlayer', opponent);
+    console.log (challenger + " removed from list with invite from " + socket.id);
+    challengingPlayer.broadcast.emit('removePlayer', challenger);
+    socket.broadcast.emit('removePlayer', acceptor);
+    challengingPlayer.emit('accepted', acceptor, room)
+
   });
 
   socket.on('createLine', function(X1, X2, Y1, Y2, Color, currentRoom) {
