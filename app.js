@@ -109,8 +109,8 @@ app.configure(function() {
 // so we have to setup polling instead.
 // https://devcenter.heroku.com/articles/using-socket-io-with-node-js-on-heroku
 io.configure(function () {
-  io.set("transports", ["xhr-polling"]);
-  io.set("polling duration", 10);
+  //io.set("transports", ["xhr-polling"]);
+  //io.set("polling duration", 10);
   io.set('log level', 1);
 });
 
@@ -181,38 +181,46 @@ io.sockets.on('connection', function (socket) {
 
     lines[room] = [];
     players[room] = new Point(10,200);
+    
     intervals[room] = setInterval (function() {
+
+      var myPlayer = players[room];
+
       if (lines[room]) {
         var i = lines[room].length;
         while (i--) {
-          var currentRect = lines[room];
-          currentRect.moveLeft(10);
-          if (myRect.collision(myPlayer)) {
-            if (myRect.baseLine.color < 0) myPlayer.x -= 0.3;
-            else if (myRect.baseLine.color > 0) myPlayer.x -= 0;
-            else io.sockets.in(room).emit('playerDeath');
+          console.log(i);
+          if(lines[room][i]){
+            var currentRect = lines[room][i];
+            currentRect.moveLeft(0.5);
+            if (currentRect.collision(myPlayer)) {
+              if (currentRect.baseLine.color < 0) io.sockets.in(room).emit('playerDeath');
+              else if (currentRect.baseLine.color > 0) myPlayer.x -= 1;
+              else myPlayer.x -= 5;
+            }
           }
-          else myPlayer.x += 0.1; 
         }
       }
       
+      myPlayer.x += 0.1; 
+
       //console.log('emitting updateCanvas to room ' + room + ' with player at ' + players[room].x + ',' + players[room].y);
       io.sockets.in(room).emit('updateCanvas', lines[room], players[room]);
 
-    }, 20)
+    }, 10);
 
   });
 
   socket.on('createLine', function(X1, X2, Y1, Y2, Color, currentRoom) {
-    var Point1 = new Point1(X1, Y1);
-    var Point1 = new Point2(X2, Y2);
+    var Point1 = new Point(X1, Y1);
+    var Point2 = new Point(X2, Y2);
     var thisLine = new Edge(Point1, Point2, Color);
-    var thisRect = new Rectangle(thisLine, halfWidth);
+    var thisRect = new Rectangle(thisLine, 7);
     lines[currentRoom].push(thisRect);
   });
 
   socket.on('playerPosition', function(x, y, currentRoom) {
-    players[CurrentRoom].x = x;
+    players[currentRoom].x = x;
     players[currentRoom].y = y;
   });
 
