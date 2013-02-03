@@ -23,6 +23,14 @@ $(function() {
   var invitePage = $("#invitepage");
   var nameBox = $("#name");
   var roleBox = $("#role");
+  var playerWinPage = $("#playerwinpage");
+  var obstaclrWinPage = $("#obstaclrwinpage");
+  var playerLosePage = $("#yolopage");
+  var obstaclrLosePage = $("#losepage");
+  var quitPage = $("#quitpage");
+  var nameValidation = $("#namevalidation");
+  var friendNameValidation = $("#friendnamevalidation");
+
 
   //Populate list of current players on connection
   socket.on('fullList', function (playerList) {
@@ -56,7 +64,7 @@ $(function() {
     name = playerName.val();
     //validation to ensure user enters a name
     if (name == '' || typeof name =='undefined'){
-      $("#namevalidation").css("display", "block");
+      nameValidation.css("display", "block");
     }
     else {
       name = name.replace(/\s/g, "");
@@ -105,7 +113,7 @@ $(function() {
     }
 
     else if (typeof vsName == undefined || vsName == '' || vsName == null){
-      $("#friendnamevalidation").css("display", "block");
+      friendNameValidation.css("display", "block");
     }
 
     socket.emit('invitePlayer', vsName, name, currentRoom, designation);
@@ -179,24 +187,24 @@ $(function() {
 
   function playerHasWon(){
     if (designation == 0){
-      $("#losepage").show();
+      obstaclrLosePage.show();
     }
     else if (designation == 1){
-      $("#playerwinpage").show();
+      playerWinPage.show();
     }
   }
   
   function obstaclrHasWon(){
     if (designation == 0){
-      $("#obstaclrwinpage").show();
+      obstaclrWinPage.show();
     }
     else if (designation == 1){
-      $("#yolopage").show();
+      playerLosePage.show();
     }
   }
 
   socket.on('opponentQuit', function() {
-    $("#quitpage").show();
+    quitPage.show();
   })
 
   //actual gameplay shit goes here
