@@ -120,6 +120,7 @@ var clients = {};
 
 var lines = {};
 var players = {};
+var intervals = {};
 
 io.sockets.on('connection', function (socket) {
   
@@ -178,6 +179,28 @@ io.sockets.on('connection', function (socket) {
     socket.broadcast.emit('removePlayer', acceptor);
     challengingPlayer.emit('accepted', acceptor, room)
 
+    lines[room] = [];
+    players[room] = new Point(10,200);
+    intervals[room] = setInterval (function() {
+      if (lines[room]) {
+        var i = lines[room].length;
+        while (i--) {
+          var currentRect = lines[room];
+          currentRect.moveLeft(10);
+          if (myRect.collision(myPlayer)) {
+            if (myRect.baseLine.color < 0) myPlayer.x -= 0.3;
+            else if (myRect.baseLine.color > 0) myPlayer.x -= 0;
+            else io.sockets.in(room).emit('playerDeath');
+          }
+          else myPlayer.x += 0.1; 
+        }
+      }
+      
+      //console.log('emitting updateCanvas to room ' + room + ' with player at ' + players[room].x + ',' + players[room].y);
+      io.sockets.in(room).emit('updateCanvas', lines[room], players[room]);
+
+    }, 20)
+
   });
 
   socket.on('createLine', function(X1, X2, Y1, Y2, Color, currentRoom) {
@@ -185,15 +208,12 @@ io.sockets.on('connection', function (socket) {
     var Point1 = new Point2(X2, Y2);
     var thisLine = new Edge(Point1, Point2, Color);
     var thisRect = new Rectangle(thisLine, halfWidth);
-
-    if (!lines.currentRoom) lines.currentRoom = [];
-    lines.currentRoom.push(thisRect);
+    lines[currentRoom].push(thisRect);
   });
 
   socket.on('playerPosition', function(x, y, currentRoom) {
-    if (!players.currentRoom) players.currentRoom = new Point(x,y);
-    //players.CurrentRoom.x = x;
-    players.currentRoom.y = y;
+    players[CurrentRoom].x = x;
+    players[currentRoom].y = y;
   });
 
   socket.on('playerExit', function(currentRoom) {
@@ -202,28 +222,28 @@ io.sockets.on('connection', function (socket) {
   
 });
 
-var allRooms = io.sockets.manager.rooms;
-allRooms = Object.keys(allRooms);
-var i = allRooms.length;
-while (i--) {
-  setTimeout (function() {
-      if (lines.allRooms[i]) {
-        var i = lines.allRooms[i].length;
-        while (i--) {
-          var currentRect = lines.allRooms[i][i];
-          currentRect.moveLeft(10);
-          if (myRect.collision(myPlayer)) {
-            if (myRect.baseLine.color < 0) myPlayer.x -= 0.3;
-            else if (myRect.baseLine.color > 0) myPlayer.x -= 0;
-            else io.sockets.in(allRooms[i]).emit('playerDeath');
-          }
-          else myPlayer.x += 0.1; 
-        }
-      }
+// var allRooms = io.sockets.manager.rooms;
+// allRooms = Object.keys(allRooms);
+// var i = allRooms.length;
+// while (i--) {
+//   setInterval (function() {
+//       if (lines.allRooms[i]) {
+//         var i = lines.allRooms[i].length;
+//         while (i--) {
+//           var currentRect = lines.allRooms[i][i];
+//           currentRect.moveLeft(10);
+//           if (myRect.collision(myPlayer)) {
+//             if (myRect.baseLine.color < 0) myPlayer.x -= 0.3;
+//             else if (myRect.baseLine.color > 0) myPlayer.x -= 0;
+//             else io.sockets.in(allRooms[i]).emit('playerDeath');
+//           }
+//           else myPlayer.x += 0.1; 
+//         }
+//       }
       
-      io.sockets.in(allRooms[i]).emit('updateCanvas', lines.allRooms[i], myPlayer);
-  }, 20)
-}
+//       io.sockets.in(allRooms[i]).emit('updateCanvas', lines.allRooms[i], myPlayer);
+//   }, 20)
+// }
 
 app.get('/', function(req, res){
   res.render('page.jade');
