@@ -38,7 +38,6 @@ $(function() {
   var opponentName = $("#opponentname");
   var quitButton = $("#quit");
   var endPage = $(".endofgamepage");
-  var switchButton = $("#switch");
 
   playerName.focus();
 
@@ -235,17 +234,10 @@ $(function() {
       playerLosePage.show();
     }
   }
-
+''
   quitButton.click(function(){
-    alert("inside quit function");
-    endPage.hide();
-    splashMenu.show();
-  });
-
-  switchButton.click(function(){
-    designation = (1 - designation);
-    endPage.hide();
-    createCanvas();
+    window.location = '/'
+    //splashMenu.show();
   });
 
   socket.on('playerDeath', function() {
