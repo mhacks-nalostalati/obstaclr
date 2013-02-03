@@ -122,7 +122,6 @@ body
   .role:hover
     color: $lightorange
 
-
 #game-start
   display:none
   width: 600px
@@ -130,7 +129,7 @@ body
   background-color: #fff
 
 .game-box
-  display: relative
+  position relative
   width: 100%
   height:100%
 .drawzone-wrapper
@@ -165,6 +164,46 @@ body
   margin-bottom:0
   margin-left: -600px
   background: #eee
+  margin-bottom:-3px
+
+.endofgamepage
+  display:none
+  width: 1195px
+  border-left:5px solid black
+  height: 400px
+  position absolute
+  top:64px
+  left 50%
+  margin-top:50px
+  margin-bottom:0
+  margin-left: -600px
+  background: white
+  z-index:1000;
+  .bigcaption
+    font-size:150px;
+    text-align:center
+    color: $orange
+    margin: 20px 0 20px 0
+  .messagebox
+    font-size:40px;
+    text-align: center
+    .r 
+      color: $orange
+    .bluetext 
+      color: $blue
+    button
+      background-color: #666
+      font-family: "Iceland"
+      font-size: .9em
+      border: none
+      color:white
+      padding: 3px
+      margin-left:10px
+      margin-right:10px
+    button:hover
+      background-color:#333
+    button:active
+      background-color: $darkorange
 
 .controls-box
   vertical-align:top

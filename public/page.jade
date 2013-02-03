@@ -8,6 +8,7 @@ html
     script(src='//code.jquery.com/ui/1.10.0/jquery-ui.js')
     script(src='/socket.io/socket.io.js')
     script(src='page.js')
+  
   body
     .splash-menu
       h1.main-header
@@ -19,33 +20,6 @@ html
         input(type="text", name="playerName")
         br
         button#nextbutton Next
-    .game-box
-      #greenzone
-      .drawzone-wrapper
-        canvas#drawzone(width="400", height="400")
-      h1.main-header
-        |obstacl<span class='r'>r</span>
-      canvas#canvas(width="1195", height="400")
-      .controls-box
-        .player-controls
-          .content
-            |use the arrow keys to move up and down. avoid the obstaclr's obstacles. reach the green zone to win. hit the black zone and die
-        .obstaclr-controls
-          .content
-            |paint lines to block the player, with a limited supply of paint. blue slows, yellow knocks back, and black kills
-          .buttons
-            #blackbuttonwrap
-              #blackcounter
-                |100
-              button#blackpaintbutton a
-            #bluebuttonwrap
-              #bluecounter
-                |100
-              button#bluepaintbutton s
-            #yellowbuttonwrap
-              #yellowcounter
-                |100
-              button#yellowpaintbutton d
 
     #game-start
       h1.main-header
@@ -66,6 +40,74 @@ html
       //.role PLAYER
       //br
       //button#match MATCH ME NOW
+
+    .game-box
+      #greenzone
+      .drawzone-wrapper
+        canvas#drawzone(width="400", height="400")
+      h1.main-header
+        |obstacl<span class='r'>r</span>
+      canvas#canvas(width="1195", height="400")
+      .endofgamepage#yolopage
+        .bigcaption YOLO
+        .messagebox
+          .message
+            |player <span class='r'>r</span> dead. and you only live <span class=bluetext>once</span>.
+          br
+          button#switch SWITCH
+          button#quit QUIT
+      .controls-box
+        .player-controls
+          .content
+            |use the arrow keys to move up and down. avoid the obstaclr's obstacles. reach the green zone to win. hit the black zone and die
+        .obstaclr-controls
+          .content
+            |paint lines to block the player, with a limited supply of paint. blue slows, yellow knocks back, and black kills
+          .buttons
+            #blackbuttonwrap
+              #blackcounter
+                |100
+              button#blackpaintbutton a
+            #bluebuttonwrap
+              #bluecounter
+                |100
+              button#bluepaintbutton s
+            #yellowbuttonwrap
+              #yellowcounter
+                |100
+              button#yellowpaintbutton d
+      .endofgamepage#playerwinpage
+        .bigcaption YOU WIN
+        .messagebox
+          .message
+            |you <span class='r'>r</span> made it to the end. <span class=bluetext>this time</span>.
+          br
+          button#switch SWITCH
+          button#quit QUIT
+      .endofgamepage#losepage
+        #bigcaption HE CAUGHT UP
+        #messagebox 
+          #message
+            |player <span class='r'>r</span> alive. <span class=bluetext>you lose</span>.
+          br
+          button#switch SWITCH
+          button#quit QUIT
+      .endofgamepage#mapperwinpage
+        .bigcaption U DREW GOOD
+        .messagebox 
+          .message
+            |player <span class='r'>r</span> dead. <span class=bluetext>you win</span>.
+          br
+          button#switch SWITCH
+          button#quit QUIT
+      .endofgamepage#quitpage
+        .bigcaption UH-OH
+        .messagebox 
+          .message
+            |player <span class='r'>r</span> quit. it's not you, it's <span class=bluetext>him</span>.
+          br
+          button#newmatch NEW MATCH
+          button#quit QUIT
 
     label#playersInLobby
       span#lobbyCount| 0

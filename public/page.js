@@ -4,6 +4,7 @@ $(function() {
   var fullPlayerList = [];
   var name;
   var designation;
+  var currentRoom;
 
   var splashMenu =  $(".splash-menu");
   var playerName = $('input[name=playerName]');
@@ -13,6 +14,7 @@ $(function() {
   var gameStart = $("#game-start");
   var playButton = $('#play');
   var playersInLobby = $('#playersInLobby');
+  var gamebox = $('.game-box');
 
   //Populate list of current players on connection
   socket.on('fullList', function (playerList) {
@@ -67,23 +69,24 @@ $(function() {
     socket.removeAllListeners("addPlayer");
     socket.removeAllListeners("removePlayer");
 
-    if (vsName < name) var newUrl = '/' + vsName + 'vs' + name;
-    else var newUrl = '/' + name + 'vs' + vsName;
+    if (vsName < name) var room = '/' + vsName + 'vs' + name;
+    else var currentRoom = '/' + name + 'vs' + vsName;
 
     designation = 0; //Currently defaulting to cartographer, 1 for player
     //todo: set designation based on interface something
 
-    socket.emit('gameStart', vsName, name, newUrl, designation);
-    window.history.pushState(null, newUrl, newUrl);
+    socket.emit('gameStart', vsName, name, currentRoom, designation);
+    window.history.pushState(null, currentRoom, currentRoom);
 
     playersInLobby.remove();
-    gameStart.fadeOut('fast', function() {});
+    gameStart.hide();
     gameplaySetup();
   });
 
   socket.on('invite', function (challenger, room, myDesignation) {
 
     designation = myDesignation; //designation 0 for cartographer, 1 for player
+    currentRoom = room; //sets the global room to send with each request, quicker than a hash lookup
 
     socket.removeAllListeners("addPlayer");
     socket.removeAllListeners("removePlayer");
@@ -92,13 +95,14 @@ $(function() {
 
     window.history.pushState(null, room, room);
     playersInLobby.remove();
-    gameStart.fadeOut('fast', function() {});
+    gameStart.hide();
     gameplaySetup();
   });
 
   var gameplaySetup = function(){
 
-    //todo: Draw the game canvas
+    //todo: Draw the game canvas, show gamebox
+    gamebox.show();
 
     if (designation == 0) { //if player is cartographer
       socket.emit('createLine', x1, x2, y1, y2, color);
@@ -114,9 +118,13 @@ $(function() {
 
   //remove from everyone's list if they close the window
   $(window).on('beforeunload', function(){
-    if (name) {
+    if (gamebox.is(":visible")) {
+      socket.emit('playerExit', currentRoom);
+      return name + ', you have left the game';
+    }
+    else if (name) {
       socket.emit('playerGone', name);
-      return 'please dont leave';
+      return name + ', we are sorry to see you go';
     }
   });
 
@@ -155,12 +163,13 @@ $(function() {
     context.strokeStyle = color;
     context.lineWidth = 10;
     context.stroke();
-
   }
+ 
   function clear(context){
     context.clearRect(0, 0, 1200, 400);
   }
-  if(false && isPlayer){
+
+  if(true || isPlayer){
     var playerDX = .1;
     var playerX = 10;
     var playerY = 200;
@@ -168,21 +177,19 @@ $(function() {
     upPressed = false;
     downPressed = false;
   
-    //set rightDown or leftDown if the right or left keys are down
     function onKeyDown(e) {
       if (e.keyCode == 38) upPressed = true;
       else if (e.keyCode == 40) downPressed = true;
     }
-
-    //and unset them when the right or left key is released
     function onKeyUp(e) {
       if (e.keyCode == 38) upPressed = false;
       else if (e.keyCode == 40) downPressed = false;
     }
-  
     $(document).keydown(onKeyDown);
     $(document).keyup(onKeyUp);
-    function draw(){
+    var startTime = window.performance.now ? (performance.now() + performance.timing.navigationStart) : Date.now();
+    function animate(timestamp){
+      timestamp = timestamp || Date.now();
       if(playerX > 590){
         clearInterval();
         playerHasWon();
@@ -192,29 +199,33 @@ $(function() {
         clearInterval();
         obstaclrHasWon();
       }
-      clear(ctx);
-      player(playerX, playerY);
+      reqAnimFrame = window.mozRequestAnimationFrame    ||
+        window.webkitRequestAnimationFrame ||
+        window.msRequestAnimationFrame     ||
+        window.oRequestAnimationFrame;
+      reqAnimFrame(animate);
       if(upPressed && !downPressed && playerY > 11) playerY -= playerDY;
       if(downPressed && !upPressed && playerY < 389) playerY += playerDY;
-      playerX += playerDX
+      playerX += playerDX;//(595 * timestamp)/120000;
+      clear(ctx);
+      player(playerX, playerY);
     }
-    setInterval(draw, 10);
+    animate();
   }
-  else if(true || isObstaclr){
+  else if(false && isObstaclr){
     var drawzone = $("#drawzone");
     var drawctx = drawzone[0].getContext('2d');
-    var lineStatus = { x1: 0, y2: 0, isStarted: false, color: "#000"}
-    var paints = {black: 100, blue: 100, yellow: 100};
+    var lineStatus = { x1: 0, y2: 0, isStarted: false, color: "#000"};
+    var paints = {"#000": 100, "#0b61a4": 100, "#ffbf00": 100};
     var bluecounter = $('#bluecounter');
     var yellowcounter = $('#yellowcounter');
     setInterval(function(){
-      if(paints.blue < 100){ paints.blue ++; bluecounter.html(paints.blue);};
-      if(paints.yellow < 100){ paints.yellow ++; yellowcounter.html(paints.yellow);};
-
+      if(paints["#0b61a4"] < 100){ paints["#0b61a4"] ++; bluecounter.html(paints["#0b61a4"]);};
+      if(paints["#ffbf00"] < 100){ paints["#ffbf00"] ++; yellowcounter.html(paints["#ffbf00"]);};
     }, 100);
     var blackcounter = $("#blackcounter");
     setInterval(function(){
-      if(paints.black < 100){ paints.black ++; blackcounter.html(paints.black)};
+      if(paints["#000"] < 100){ paints["#000"] ++; blackcounter.html(paints["#000"])};
     }, 200);
     var ymax = 200;
     function selectColor(color){
@@ -235,6 +246,7 @@ $(function() {
         $('#yellowpaintbutton').addClass('selected');
       }
     }
+    selectColor(-1);
     $(document).keydown(function(e){
       if(e.keyCode == 65) selectColor(-1);
       if(e.keyCode == 83) selectColor(1);
@@ -248,6 +260,8 @@ $(function() {
         var y = (Math.abs(e.offsetY - lineStatus.y1) < ymax) ? e.offsetY : lineStatus.y1 + ((e.offsetY - lineStatus.y1)/Math.abs(e.offsetY - lineStatus.y1))*ymax;
         clear(drawctx);
         drawLine(ctx, lineStatus.color, lineStatus.x1 + 795, lineStatus.y1, e.offsetX + 795,y);
+        var length = Math.sqrt(Math.pow((e.offsetX - lineStatus.x1),2) + Math.pow((y - lineStatus.y1),2));
+        paints[lineStatus.color] -= Math.floor(length/5);
         lineStatus.isStarted = false;
       }
       else{
@@ -262,6 +276,5 @@ $(function() {
       var y = (Math.abs(e.offsetY - lineStatus.y1) < ymax) ? e.offsetY : lineStatus.y1 + ((e.offsetY - lineStatus.y1)/Math.abs(e.offsetY - lineStatus.y1))*ymax;
       drawLine(drawctx,lineStatus.color, lineStatus.x1, lineStatus.y1, e.offsetX, y); 
     });
-
   }
 });
