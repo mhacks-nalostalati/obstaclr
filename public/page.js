@@ -19,6 +19,7 @@ $(function() {
   var obstaclr = $("#mapper");
   var player = $('#player');
   var acceptButton = $("#accept");
+  var declineButton = $("#decline");
   var invitePage = $("#invitepage");
   var nameBox = $("#name");
   var roleBox = $("#role");
@@ -71,12 +72,12 @@ $(function() {
     }
   });
 
-    //when user selects role of mapper
-    $("#mapper").click(function(){
-      designation = 0;
-      $("#mapper").css("color", "#ff4900");
-      $("#player").css("color", "black");
-    });
+  //when user selects role of obstaclr
+  obstaclr.click(function(){
+    designation = 0;
+    obstaclr.css("color", "#ff4900");
+    player.css("color", "black");
+  });
 
     //when user selects role of player
     $("#player").click(function(){
@@ -108,8 +109,14 @@ $(function() {
     }
 
     socket.emit('invitePlayer', vsName, name, currentRoom, designation);
+    gameStart.hide();
     waitingPage.show();
 
+  });
+
+  declineButton.click(function() {
+    invitePage.hide();
+    gameStart.show();
   });
 
   socket.on('invite', function (challenger, room, myDesignation) {
@@ -124,7 +131,7 @@ $(function() {
     
     var role;
     if (myDesignation == 1) role = "player";
-    else role = "mapper";
+    else role = "obstaclr";
 
     var replacerole = roleBox.html().replace("role", role);
     roleBox.html(replacerole);
@@ -145,6 +152,7 @@ $(function() {
 
   //when the challenger recieves an acceptance back
   socket.on('accepted', function (vsName, room) {
+    waitingPage.hide();
     currentRoom = room;
     socket.removeAllListeners("addPlayer");
     socket.removeAllListeners("removePlayer");

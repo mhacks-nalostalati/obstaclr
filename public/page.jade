@@ -30,8 +30,8 @@ html
       #chooserole
         #chooserolemessage
           |choose your role
-        .role#mapper MAPPER
-        .role#player OBSTACLR
+        .role#mapper OBSTACLR
+        .role#player PLAYER
         .validation#rolevalidation
           |please select a role
       #friendname
@@ -41,13 +41,9 @@ html
         input(type="text", name="friendsName")
         br
         .validation#friendnamevalidation
-        |please enter your friend's name
+          |please enter your friend's name
         br
         button#play INVITE 
-        
-
-      #waitmessage
-        |waiting for your friend to accept your invite...
       #random
         |otherwise, find a match
         br
@@ -57,6 +53,8 @@ html
       br 
       button#accept ACCEPT
       button#decline DECLINE
+    #waitmessage
+      |waiting for your friend to accept your invite...
 
 
     .game-box
