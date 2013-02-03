@@ -40,7 +40,7 @@ body{font-family:'Iceland',sans;font-size:100%;overflow:hidden;background-color:
 #invitepage button:active{background-color:#bf5930}
 #game-start{display:none;width:600px;margin:50px auto;background-color:#fff;}
 #game-start .validation{color:#ff4900;font-size:15px;display:none;text-align:center;padding-top:5px}
-#game-start #waitmessage{font-size:30px;display:none;text-align:center}
+#waitmessage{font-size:30px;display:none;text-align:center;font-size:1.5em;text-align:center;color:#666;padding:30px 0 30px 0;display:none;width:600px;margin:50px auto;background-color:#fff}
 .game-box{display:none;position:relative;width:100%;height:100%}
 .drawzone-wrapper{position:absolute;width:400px;height:400px;left:50%;margin-left:200px;top:114px}
 #drawzone{position:relative;z-index:2;width:400px;height:400px}
