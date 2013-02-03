@@ -3,7 +3,7 @@ $(function() {
 
   var fullPlayerList = [];
   var name;
-  var designation;
+  var designation = -1;
   var currentRoom;
 
   var splashMenu =  $(".splash-menu");
@@ -89,19 +89,19 @@ $(function() {
     playerBox.css("color", "black");
   });
 
-    //when user selects role of player
-    player.click(function(){
-      designation = 1;
-      player.css("color", "#ff4900");
-      obstaclr.css("color", "black");
-    });
+  //when user selects role of player
+  playerBox.click(function(){
+    designation = 1;
+    playerBox.css("color", "#ff4900");
+    obstaclr.css("color", "black");
+  });
 
-    //when they click accept on the invite
-    acceptButton.click(function(){
-      invitePage.hide();
-      gameplaySetup();
-      acceptButton.css("color", "#ff4900");
-    });
+  //when they click accept on the invite
+  acceptButton.click(function(){
+    invitePage.hide();
+    gameplaySetup();
+    acceptButton.css("color", "#ff4900");
+  });
 
   //when they click the play button
   playButton.click(function() {
@@ -110,7 +110,7 @@ $(function() {
     if (fullPlayerList.indexOf(vsName) == -1) return;
     
     //validation to ensure user chooses a role
-    if (typeof designation == undefined || designation==''){
+    if (typeof designation === undefined || designation === null || designation == -1){
       roleValidation.show();
     }
 
@@ -147,7 +147,7 @@ $(function() {
     nameBox.html(replacename);
     
     var role;
-    if (myDesignation == 1) role = "player";
+    if (designation == 1) role = "player";
     else role = "obstaclr";
 
     var replacerole = roleBox.html().replace("role", role);
@@ -180,19 +180,21 @@ $(function() {
   })
 
 
-  var gameplaySetup = function(){ gamebox.show(); }
+  var gameplaySetup = function(){ 
+    gamebox.show(); 
+  }
 
   //remove from everyone's list if they close the window
-  $(window).on('beforeunload', function(){
-    if (gamebox.is(":visible")) {
-      socket.emit('playerExit', currentRoom);
-      return name + ', you have left the game';
-    }
-    else if (name) {
-      socket.emit('playerGone', name);
-      return name + ', we are sorry to see you go';
-    }
-  });
+  // $(window).on('beforeunload', function(){
+  //   if (gamebox.is(":visible")) {
+  //     socket.emit('playerExit', currentRoom);
+  //     return name + ', you have left the game';
+  //   }
+  //   else if (name) {
+  //     socket.emit('playerGone', name);
+  //     return name + ', we are sorry to see you go';
+  //   }
+  // });
 
   function playerHasWon(){
     if (designation == 0){
@@ -248,8 +250,9 @@ $(function() {
   function clear(context){
     context.clearRect(0, 0, 1200, 400);
   }
+
   player(10,200);
-  console.log(designation);
+    
   if(designation > 0){
     var playerDX = .1;
     var playerX = 10;
