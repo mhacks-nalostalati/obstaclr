@@ -116,8 +116,8 @@ app.configure(function() {
 // so we have to setup polling instead.
 // https://devcenter.heroku.com/articles/using-socket-io-with-node-js-on-heroku
 io.configure(function () {
-  // io.set("transports", ["xhr-polling"]);
-  // io.set("polling duration", 10);
+  io.set("transports", ["xhr-polling"]);
+  io.set("polling duration", 10);
   io.set('log level', 1);
 });
 
