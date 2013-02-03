@@ -201,6 +201,10 @@ $(function() {
     }
   }
 
+  socket.on('opponentQuit', function() {
+    $("#quitpage").show();
+  })
+
   //actual gameplay shit goes here
   var ctx = $('#canvas')[0].getContext('2d');
 
