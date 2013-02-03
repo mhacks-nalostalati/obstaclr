@@ -257,7 +257,7 @@ $(function() {
     if(designation > 0){
       var playerX = 10;
       var playerY = 200;
-      var playerDY = 3;
+      var playerDY = 5;
       upPressed = false;
       downPressed = false;
     
@@ -272,7 +272,6 @@ $(function() {
       $(document).keydown(onKeyDown);
       $(document).keyup(onKeyUp);
       socket.on('updateCanvas', function(lines, player){
-        console.log('hit1');
         if(player.x > 590){
           playerHasWon();
           return;
