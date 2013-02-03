@@ -89,23 +89,20 @@ $(function() {
 
   //when they click the play button
   playButton.click(function() {
-
-
+    var vsName = friendsName.val().toLowerCase();
+    friendsName.val(vsName);
+    if (fullPlayerList.indexOf(vsName) == -1) return;
+    
     //validation to ensure user chooses a role
     if (designation == undefined){
       $("#rolevalidation").css("display", "block");
     }
 
-    else if (vsName == undefined){
+    else if (typeof vsName == undefined || vsName == '' || vsName == null){
       $("#friendnamevalidation").css("display", "block");
     }
-    
-    var vsName = friendsName.val().toLowerCase();
-    friendsName.val(vsName);
-    if (fullPlayerList.indexOf(vsName) == -1) return;
 
-    $("#waitmessage").css("display", "block");
-
+    socket.emit('invite')
 
   });
 
