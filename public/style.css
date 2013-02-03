@@ -8,28 +8,38 @@ a img{border:none}
 body{font-family:'Iceland',sans;font-size:100%;overflow:hidden;background-color:#ddd}
 .main-header{font-size:4em;font-weight:bold;color:#0b61a4;width:95%;padding-left:5%;background:#eee;}
 .main-header .r{color:#ff4900}
-.splash-menu{display:none;width:500px;margin:50px auto;background-color:#fff}
+.splash-menu{display:none;width:500px;margin:50px auto;background-color:#fff;}
+.splash-menu .validation{color:#ff4900;font-size:15px;display:none;text-align:center;padding-top:5px}
 #name-entry{font-size:1.5em;text-align:center;padding:30px 0 30px 0;}
 #name-entry label{color:#ff7640;font-weight:bold}
 #name-entry input{font-size:.8em;margin:5px 0;padding:5px;border:2px solid #000}
 #name-entry button{background-color:#666;font-family:"Iceland";font-size:.9em;border:none;color:#fff;padding:3px}
 #name-entry button:hover{background-color:#333}
 #name-entry button:active{background-color:#ff7640}
-#friendname{font-size:1.5em;text-align:center;padding:30px 0 0 0;}
+#friendname{font-size:1.5em;text-align:center;}
 #friendname label{color:#666}
 #friendname input{font-size:.8em;padding:5px;margin:5px 0;border:2px solid #000}
 #friendname button{background-color:#666;font-family:"Iceland";font-size:.9em;border:none;color:#fff;padding:3px}
 #friendname button:hover{background-color:#333}
 #friendname button:active{background-color:#bf5930}
 #playersInLobby{font-size:1.5em;text-align:center;color:#ff7640;position:relative;left:50%;margin-left:-100px}
+#chooserole{font-size:1.5em;text-align:center;color:#666;padding:30px 0 30px 0;}
+#chooserole #chooserolemessage{font-size:1.7em;margin-bottom:5px}
+#chooserole input{margin-bottom:10px}
+#chooserole .role{color:#000}
+#chooserole .role:hover{color:#ff7640}
 #random{font-size:1.5em;text-align:center;color:#666;padding:30px 0 30px 0;}
 #random input{margin-bottom:10px}
 #random button{background-color:#666;font-family:"Iceland";font-size:.9em;border:none;color:#fff;padding:3px}
 #random button:hover{background-color:#333}
 #random button:active{background-color:#bf5930}
-#random .role{color:#000}
-#random .role:hover{color:#ff7640}
-#game-start{display:none;width:600px;margin:50px auto;background-color:#fff}
+#invitepage{font-size:1.5em;text-align:center;color:#666;padding:30px 0 30px 0;display:none;width:600px;margin:50px auto;background-color:#fff;}
+#invitepage button{background-color:#666;font-family:"Iceland";font-size:.9em;border:none;color:#fff;padding:3px}
+#invitepage button:hover{background-color:#333}
+#invitepage button:active{background-color:#bf5930}
+#game-start{display:none;width:600px;margin:50px auto;background-color:#fff;}
+#game-start .validation{color:#ff4900;font-size:15px;display:none;text-align:center;padding-top:5px}
+#game-start #waitmessage{font-size:30px;display:none;text-align:center}
 .game-box{position:relative;width:100%;height:100%}
 .drawzone-wrapper{position:absolute;width:400px;height:400px;left:50%;margin-left:200px;top:114px}
 #drawzone{position:relative;z-index:2;width:400px;height:400px}

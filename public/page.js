@@ -46,6 +46,11 @@ $(function() {
   //format and add the name when they come in
   nextButton.click(function() {
     name = playerName.val();
+    //validation to ensure user enters a name
+    if (name == '' || typeof name =='undefined'){
+      $("#namevalidation").css("display", "block");
+    }
+    else {
     name = name.replace(/\s/g, "");
     name = name.toLowerCase();
     playerName.val(name);
@@ -55,12 +60,44 @@ $(function() {
     }
     socket.emit('newPlayer', name);
     splashMenu.remove();
-    gameStart.fadeIn('fast', function() {});
+    gameStart.show();
+    }
   });
+
+
+      //when user selects role of mapper
+      $("#mapper").click(function(){
+        designation = 0;
+        $("#mapper").css("color", "#ff4900");
+        $("#player").css("color", "black");
+        
+    });
+
+    //when user selects role of player
+    $("#player").click(function(){
+      designation = 1;
+      $("#player").css("color", "#ff4900");
+      $("#mapper").css("color", "black");
+    });
+
+    //when they click accept on the invite
+    $("#accept").click(function(){
+      $("#invitepage").hide();
+      gameplaySetup();
+      $("#accept").css("color", "#ff4900");
+    });
 
   //when they click the play button
   playButton.click(function() {
+    //validation to ensure user chooses a role
+    if (designation == undefined){
+      $("#rolevalidation").css("display", "block");
+    }
 
+    else if (vsName == undefined){
+      $("#friendnamevalidation").css("display", "block");
+    }
+    
     var vsName = friendsName.val().toLowerCase();
     friendsName.val(vsName);
     if (fullPlayerList.indexOf(vsName) == -1) return;
@@ -72,31 +109,45 @@ $(function() {
     if (vsName < name) var room = '/' + vsName + 'vs' + name;
     else var currentRoom = '/' + name + 'vs' + vsName;
 
-    designation = 0; //Currently defaulting to cartographer, 1 for player
-    //todo: set designation based on interface something
-
     socket.emit('gameStart', vsName, name, currentRoom, designation);
     window.history.pushState(null, currentRoom, currentRoom);
 
     playersInLobby.remove();
+    
     gameStart.hide();
     gameplaySetup();
+    
   });
 
   socket.on('invite', function (challenger, room, myDesignation) {
-
     designation = myDesignation; //designation 0 for cartographer, 1 for player
     currentRoom = room; //sets the global room to send with each request, quicker than a hash lookup
 
     socket.removeAllListeners("addPlayer");
     socket.removeAllListeners("removePlayer");
 
-    //possibeTodo: accept invitation
-
-    window.history.pushState(null, room, room);
     playersInLobby.remove();
     gameStart.hide();
-    gameplaySetup();
+
+    //possibeTodo: accept invitation
+    $("#invitepage").show();
+    var replacename = $("#name").html().replace("name", challenger);
+    $("#name").html(replacename);
+    
+    var role;
+
+    if (myDesignation == 1){
+      role = "player"}
+    else {
+      role = "mapper"
+    }
+
+    var replacerole = $("#role").html().replace("role", role);
+    $("#role").html(replacerole);
+    
+    window.history.pushState(null, room, room);
+    //gameplaySetup();
+    
   });
 
   var gameplaySetup = function(){
@@ -173,7 +224,7 @@ $(function() {
     var playerDX = .1;
     var playerX = 10;
     var playerY = 200;
-    var playerDY = 3;
+    var playerDY = 5;
     upPressed = false;
     downPressed = false;
   

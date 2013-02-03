@@ -20,26 +20,41 @@ html
         input(type="text", name="playerName")
         br
         button#nextbutton Next
+        .validation#namevalidation
+          |please enter your name
 
     #game-start
       h1.main-header
         |obstacl<span class='r'>r</span>
+      #chooserole
+        #chooserolemessage
+          |choose your role
+        .role#mapper MAPPER
+        .role#player OBSTACLR
+        .validation#rolevalidation
+          |please select a role
       #friendname
         label
           |if you are playing with a friend, enter your friend's name:
         br
         input(type="text", name="friendsName")
         br
-        button#play PLAY NOW
+        button#play INVITE 
         br
+      .validation#friendnamevalidation
+        |please enter your friend's name
+      #waitmessage
+        |waiting for your friend to accept your invite...
+      #random
+        |otherwise, find a match
         br
-      //#random
-      //|otherwise, choose your role
-      //br
-      //.role MAPPER
-      //.role PLAYER
-      //br
-      //button#match MATCH ME NOW
+        button#match MATCH ME NOW
+    #invitepage
+      | Your friend <span id=name>name</span> has invited you to be a <span id=role>role</span>
+      br 
+      button#accept ACCEPT
+      button#decline DECLINE
+
 
     .game-box
       #greenzone
