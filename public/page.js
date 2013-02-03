@@ -30,6 +30,7 @@ $(function() {
   var quitPage = $("#quitpage");
   var nameValidation = $("#namevalidation");
   var friendNameValidation = $("#friendnamevalidation");
+  var newMatchButton = $("#newmatch");
 
 
   //Populate list of current players on connection
@@ -123,6 +124,11 @@ $(function() {
   });
 
   declineButton.click(function() {
+    invitePage.hide();
+    gameStart.show();
+  });
+
+  newMatchButton.click(function() {
     invitePage.hide();
     gameStart.show();
   });
