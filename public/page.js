@@ -36,6 +36,8 @@ $(function() {
   var noOpponentMessage = $("#noopponentmessage");
   var opponentMatch = $("#opponentmatch");
   var opponentName = $("#opponentname");
+  var quitButton = $("#quit");
+  var endPage = $(".endofgamepage");
 
   playerName.focus();
 
@@ -232,6 +234,16 @@ $(function() {
       playerLosePage.show();
     }
   }
+
+  quitButton.click(function(){
+    endPage.hide();
+    splashMenu.show();
+  });
+
+  switchButton.click(function(){
+    designation = (1 - designation);
+    createCanvas();
+  });
 
   socket.on('opponentQuit', function() {
     quitPage.show();
