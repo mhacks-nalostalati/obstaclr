@@ -102,21 +102,21 @@ html
           .message
             |you <span class='r'>r</span> made it to the end. <span class=bluetext>this time</span>.
           br
-          button#quit QUIT
+          button.quit QUIT
       .endofgamepage#losepage
         .bigcaption HE CAUGHT UP
         .messagebox 
           .message
             |player <span class='r'>r</span> alive. <span class=bluetext>you lose</span>.
           br
-          button#quit QUIT
+          button.quit QUIT
       .endofgamepage#obstaclrwinpage
         .bigcaption U DREW GOOD
         .messagebox 
           .message
             |player <span class='r'>r</span> dead. <span class=bluetext>you win</span>.
           br
-          button#quit QUIT
+          button.quit QUIT
       .endofgamepage#quitpage
         .bigcaption UH-OH
         .messagebox 
@@ -124,7 +124,7 @@ html
             |player <span class='r'>r</span> quit. it's not you, it's <span class=bluetext>him</span>.
           br
           button#newmatch NEW MATCH
-          button#quit QUIT
+          button.quit QUIT
 
     label#playersInLobby
       span#lobbyCount| 0

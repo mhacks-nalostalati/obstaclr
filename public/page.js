@@ -36,7 +36,7 @@ $(function() {
   var noOpponentMessage = $("#noopponentmessage");
   var opponentMatch = $("#opponentmatch");
   var opponentName = $("#opponentname");
-  var quitButton = $("#quit");
+  var quitButton = $(".quit");
   var endPage = $(".endofgamepage");
 
   playerName.focus();
@@ -225,10 +225,6 @@ $(function() {
     else if (designation == 1){
       playerWinPage.show();
     }
-    quitButton.click(function(){
-      window.location = '/'
-      //splashMenu.show();
-     });
   }
   
   function obstaclrHasWon(){
@@ -238,11 +234,12 @@ $(function() {
     else if (designation == 1){
       playerLosePage.show();
     }
-    quitButton.click(function(){
+  }
+
+  quitButton.click(function(){
       window.location = '/'
       //splashMenu.show();
-    });
-  }
+  });
 
   socket.on('playerDeath', function() {
     obstaclrHasWon();
