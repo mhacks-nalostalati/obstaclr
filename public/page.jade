@@ -21,6 +21,8 @@ html
         br
         .validation#namevalidation
           |please enter your name
+        #nametaken
+          |sorry, this name is taken. please try again
         button#nextbutton Next
         
 
@@ -75,7 +77,7 @@ html
           .message
             |player <span class='r'>r</span> dead. and you only live <span class=bluetext>once</span>.
           br
-          button#quit QUIT
+          button.quit QUIT
       .controls-box
         .player-controls
           .content

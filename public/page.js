@@ -38,6 +38,7 @@ $(function() {
   var opponentName = $("#opponentname");
   var quitButton = $(".quit");
   var endPage = $(".endofgamepage");
+  var nameTaken = $("#nametaken");
 
   playerName.focus();
 
@@ -88,7 +89,8 @@ $(function() {
       name = name.toLowerCase();
       playerName.val(name);
       if (!(fullPlayerList.indexOf(name) == -1)) {
-        nextButton.prev().prev().prev().prev().text('Taken, try again');
+        //nextButton.prev().prev().prev().prev().prev().text('Taken, try again');
+        nameTaken.show();
         return;
       }
       socket.emit('newPlayer', name);
