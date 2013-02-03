@@ -36,7 +36,7 @@ $(function() {
   var noOpponentMessage = $("#noopponentmessage");
   var opponentMatch = $("#opponentmatch");
   var opponentName = $("#opponentname");
-  var quitButton = $("#quit");
+  var quitButton = $(".quit");
   var endPage = $(".endofgamepage");
 
   playerName.focus();
@@ -187,6 +187,7 @@ $(function() {
     gameplaySetup();
   });
 
+
   //when the challenger recieves an acceptance back
   socket.on('accepted', function (vsName, room) {
     waitingPage.hide();
@@ -199,11 +200,11 @@ $(function() {
     gameplaySetup();
   })
 
-
   var gameplaySetup = function(){ 
     gamebox.show(); 
     createCanvas();
   }
+
 
   //remove from everyone's list if they close the window
   $(window).on('beforeunload', function(){
@@ -236,14 +237,10 @@ $(function() {
   }
 
   quitButton.click(function(){
-    endPage.hide();
-    splashMenu.show();
+      window.location = '/'
+      //splashMenu.show();
   });
 
-  switchButton.click(function(){
-    designation = (1 - designation);
-    createCanvas();
-  });
   socket.on('playerDeath', function() {
     obstaclrHasWon();
   })
@@ -251,6 +248,7 @@ $(function() {
   socket.on('opponentQuit', function() {
     quitPage.show();
   })
+
 
   function createCanvas() {
     //actual gameplay shit goes here
