@@ -89,19 +89,24 @@ $(function() {
 
   //when they click the play button
   playButton.click(function() {
+    var vsName = friendsName.val().toLowerCase();
+    friendsName.val(vsName);
+    if (fullPlayerList.indexOf(vsName) == -1) return;
+    
     //validation to ensure user chooses a role
     if (designation == undefined){
       $("#rolevalidation").css("display", "block");
     }
 
-    else if (vsName == undefined){
+    else if (typeof vsName == undefined || vsName == '' || vsName == null){
       $("#friendnamevalidation").css("display", "block");
     }
-    
-    var vsName = friendsName.val().toLowerCase();
-    friendsName.val(vsName);
-    if (fullPlayerList.indexOf(vsName) == -1) return;
 
+    socket.emit('invitePlayer', vsName, name, currentRoom, designation)
+
+  });
+
+  socket.on('accepted', function (vsName) {
     socket.emit('playerGone', name)
     socket.removeAllListeners("addPlayer");
     socket.removeAllListeners("removePlayer");
@@ -116,8 +121,8 @@ $(function() {
     
     gameStart.hide();
     gameplaySetup();
-    
-  });
+
+  })
 
   socket.on('invite', function (challenger, room, myDesignation) {
     designation = myDesignation; //designation 0 for cartographer, 1 for player
@@ -180,11 +185,25 @@ $(function() {
   });
 
   function playerHasWon(){
-
+    if (designation == 0){
+      $("#losepage").show();
+    }
+    else if (designation == 1){
+      $("#playerwinpage").show();
+    }
   }
   function obstaclrHasWon(){
-
+    if (designation == 0){
+      $("#obstaclrwinpage").show();
+    }
+    else if (designation == 1){
+      $("#yolopage").show();
+    }
   }
+
+  socket.on('opponentQuit', function() {
+    $("#quitpage").show();
+  })
 
   //actual gameplay shit goes here
   var ctx = $('#canvas')[0].getContext('2d');
