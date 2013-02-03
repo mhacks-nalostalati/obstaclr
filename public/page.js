@@ -156,8 +156,9 @@ $(function() {
   });
 
   newMatchButton.click(function() {
-    invitePage.hide();
-    gameStart.show();
+    window.location = '/'
+    //invitePage.hide();
+    //gameStart.show();
   });
 
   socket.on('invite', function (challenger, room, myDesignation) {
