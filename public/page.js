@@ -66,7 +66,7 @@ $(function() {
     name = playerName.val();
     //validation to ensure user enters a name
     if (name == '' || typeof name =='undefined'){
-      nameValidation.css("display", "block");
+      nameValidation.show();
     }
     else {
       name = name.replace(/\s/g, "");
@@ -106,6 +106,7 @@ $(function() {
   //when they click the play button
   playButton.click(function() {
     var vsName = friendsName.val().toLowerCase();
+    alert(vsName);
     friendsName.val(vsName);
     if (fullPlayerList.indexOf(vsName) == -1) return;
     
@@ -114,7 +115,7 @@ $(function() {
       roleValidation.show();
     }
 
-    else if (typeof vsName == undefined || vsName == '' || vsName == null){
+    else if (typeof vsName == undefined || vsName == ''){
       friendNameValidation.show();
     }
 
