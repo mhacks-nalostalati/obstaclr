@@ -15,6 +15,13 @@ $(function() {
   var playButton = $('#play');
   var playersInLobby = $('#playersInLobby');
   var gamebox = $('.game-box');
+  var waitingPage = $("#waitmessage");
+  var obstaclr = $("#mapper");
+  var player = $('#player');
+  var acceptButton = $("#accept");
+  var invitePage = $("#invitepage");
+  var nameBox = $("#name");
+  var roleBox = $("#role");
 
   //Populate list of current players on connection
   socket.on('fullList', function (playerList) {
@@ -51,13 +58,13 @@ $(function() {
       $("#namevalidation").css("display", "block");
     }
     else {
-    name = name.replace(/\s/g, "");
-    name = name.toLowerCase();
-    playerName.val(name);
-    if (!(fullPlayerList.indexOf(name) == -1)) {
-      nextButton.prev().prev().prev().prev().text('Taken, try again');
-      return;
-    }
+      name = name.replace(/\s/g, "");
+      name = name.toLowerCase();
+      playerName.val(name);
+      if (!(fullPlayerList.indexOf(name) == -1)) {
+        nextButton.prev().prev().prev().prev().text('Taken, try again');
+        return;
+      }
     socket.emit('newPlayer', name);
     splashMenu.remove();
     gameStart.show();
@@ -100,75 +107,55 @@ $(function() {
       $("#friendnamevalidation").css("display", "block");
     }
 
-    socket.emit('invitePlayer', vsName, name, currentRoom, designation)
+    socket.emit('invitePlayer', vsName, name, currentRoom, designation);
+    waitingPage.show();
 
   });
-
-  socket.on('accepted', function (vsName) {
-    socket.emit('playerGone', name)
-    socket.removeAllListeners("addPlayer");
-    socket.removeAllListeners("removePlayer");
-
-    if (vsName < name) var room = '/' + vsName + 'vs' + name;
-    else var currentRoom = '/' + name + 'vs' + vsName;
-
-    socket.emit('gameStart', vsName, name, currentRoom, designation);
-    window.history.pushState(null, currentRoom, currentRoom);
-
-    playersInLobby.remove();
-    
-    gameStart.hide();
-    gameplaySetup();
-
-  })
 
   socket.on('invite', function (challenger, room, myDesignation) {
     designation = myDesignation; //designation 0 for cartographer, 1 for player
     currentRoom = room; //sets the global room to send with each request, quicker than a hash lookup
 
-    socket.removeAllListeners("addPlayer");
-    socket.removeAllListeners("removePlayer");
-
-    playersInLobby.remove();
     gameStart.hide();
-
-    //possibeTodo: accept invitation
-    $("#invitepage").show();
-    var replacename = $("#name").html().replace("name", challenger);
-    $("#name").html(replacename);
+ 
+    invitePage.show();
+    var replacename = nameBox.html().replace("name", challenger);
+    nameBox.html(replacename);
     
     var role;
+    if (myDesignation == 1) role = "player";
+    else role = "mapper";
 
-    if (myDesignation == 1){
-      role = "player"}
-    else {
-      role = "mapper"
-    }
-
-    var replacerole = $("#role").html().replace("role", role);
-    $("#role").html(replacerole);
-    
-    window.history.pushState(null, room, room);
-    //gameplaySetup();
+    var replacerole = roleBox.html().replace("role", role);
+    roleBox.html(replacerole);
     
   });
 
-  var gameplaySetup = function(){
+  //when they click accept on the invite
+  acceptButton.click(function(){
+    invitePage.hide();
+    acceptButton.css("color", "#ff4900");
+    window.history.pushState(null, currentRoom, currentRoom);
+    playersInLobby.remove();
+    socket.removeAllListeners("addPlayer");
+    socket.removeAllListeners("removePlayer");
+    socket.emit('playerAccepts', name, nameBox.html(), currentRoom)
+    gameplaySetup();
+  });
 
-    //todo: Draw the game canvas, show gamebox
-    gamebox.show();
+  //when the challenger recieves an acceptance back
+  socket.on('accepted', function (vsName, room) {
+    currentRoom = room;
+    socket.removeAllListeners("addPlayer");
+    socket.removeAllListeners("removePlayer");
+    window.history.pushState(null, currentRoom, currentRoom);
+    playersInLobby.remove();
+    gameStart.hide();
+    gameplaySetup();
+  })
 
-    if (designation == 0) { //if player is cartographer
-      socket.emit('createLine', x1, x2, y1, y2, color);
-       
-      socket.emit('playerPositioned', x, y);
-    }
-    else if (designation == 0) { //if player is player
-      socket.emit('playerPosition', x, y) 
 
-      socket.on('lineCreated', x1, x2, y1, y2, color)
-    }
-  }
+  var gameplaySetup = function(){ gamebox.show(); }
 
   //remove from everyone's list if they close the window
   $(window).on('beforeunload', function(){
