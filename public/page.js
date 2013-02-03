@@ -3,7 +3,7 @@ $(function() {
 
   var fullPlayerList = [];
   var name;
-  var designation;
+  var designation = -1;
   var currentRoom;
 
   var splashMenu =  $(".splash-menu");
@@ -17,7 +17,7 @@ $(function() {
   var gamebox = $('.game-box');
   var waitingPage = $("#waitmessage");
   var obstaclr = $("#mapper");
-  var player = $('#player');
+  var playerBox = $('#player');
   var acceptButton = $("#accept");
   var declineButton = $("#decline");
   var invitePage = $("#invitepage");
@@ -29,9 +29,9 @@ $(function() {
   var obstaclrLosePage = $("#losepage");
   var quitPage = $("#quitpage");
   var nameValidation = $("#namevalidation");
-  var friendNameValidation = $("#friendnamevalidation");
   var newMatchButton = $("#newmatch");
   var roleValidation = $("#rolevalidation");
+  var friendNameValidation = $("#friendnamevalidation");
 
 
   //Populate list of current players on connection
@@ -86,43 +86,44 @@ $(function() {
   obstaclr.click(function(){
     designation = 0;
     obstaclr.css("color", "#ff4900");
-    player.css("color", "black");
+    playerBox.css("color", "black");
   });
 
-    //when user selects role of player
-    player.click(function(){
-      designation = 1;
-      player.css("color", "#ff4900");
-      obstaclr.css("color", "black");
-    });
+  //when user selects role of player
+  playerBox.click(function(){
+    designation = 1;
+    playerBox.css("color", "#ff4900");
+    obstaclr.css("color", "black");
+  });
 
-    //when they click accept on the invite
-    acceptButton.click(function(){
-      invitePage.hide();
-      gameplaySetup();
-      acceptButton.css("color", "#ff4900");
-    });
+  //when they click accept on the invite
+  acceptButton.click(function(){
+    invitePage.hide();
+    gameplaySetup();
+    acceptButton.css("color", "#ff4900");
+  });
 
   //when they click the play button
   playButton.click(function() {
     var vsName = friendsName.val().toLowerCase();
-    alert(vsName);
     friendsName.val(vsName);
-    if (fullPlayerList.indexOf(vsName) == -1) return;
-    
     //validation to ensure user chooses a role
-    if (typeof designation == undefined || designation==''){
-      roleValidation.show();
+    if (designation === 'null' || typeof designation === 'undefined' || designation == '-1'){
+      roleValidation.show(); 
+      return;
     }
 
-    else if (typeof vsName == undefined || vsName == ''){
+    else if (vsName == '' || typeof vsName =='undefined' || fullPlayerList.indexOf(vsName) == '-1'){
       friendNameValidation.show();
+      return;
     }
+
+    if (vsName < name) currentRoom = vsName + 'vs' + name;
+    else currentRoom = name + 'vs' + vsName;
 
     socket.emit('invitePlayer', vsName, name, currentRoom, designation);
     gameStart.hide();
     waitingPage.show();
-
   });
 
   declineButton.click(function() {
@@ -146,7 +147,7 @@ $(function() {
     nameBox.html(replacename);
     
     var role;
-    if (myDesignation == 1) role = "player";
+    if (designation == 1) role = "player";
     else role = "obstaclr";
 
     var replacerole = roleBox.html().replace("role", role);
@@ -158,7 +159,7 @@ $(function() {
   acceptButton.click(function(){
     invitePage.hide();
     acceptButton.css("color", "#ff4900");
-    window.history.pushState(null, currentRoom, currentRoom);
+    window.history.pushState(null, currentRoom, '/' + currentRoom);
     playersInLobby.remove();
     socket.removeAllListeners("addPlayer");
     socket.removeAllListeners("removePlayer");
@@ -172,26 +173,28 @@ $(function() {
     currentRoom = room;
     socket.removeAllListeners("addPlayer");
     socket.removeAllListeners("removePlayer");
-    window.history.pushState(null, currentRoom, currentRoom);
+    window.history.pushState(null, currentRoom, '/' + currentRoom);
     playersInLobby.remove();
     gameStart.hide();
     gameplaySetup();
   })
 
 
-  var gameplaySetup = function(){ gamebox.show(); }
+  var gameplaySetup = function(){ 
+    gamebox.show(); 
+  }
 
   //remove from everyone's list if they close the window
-  $(window).on('beforeunload', function(){
-    if (gamebox.is(":visible")) {
-      socket.emit('playerExit', currentRoom);
-      return name + ', you have left the game';
-    }
-    else if (name) {
-      socket.emit('playerGone', name);
-      return name + ', we are sorry to see you go';
-    }
-  });
+  // $(window).on('beforeunload', function(){
+  //   if (gamebox.is(":visible")) {
+  //     socket.emit('playerExit', currentRoom);
+  //     return name + ', you have left the game';
+  //   }
+  //   else if (name) {
+  //     socket.emit('playerGone', name);
+  //     return name + ', we are sorry to see you go';
+  //   }
+  // });
 
   function playerHasWon(){
     if (designation == 0){
@@ -226,7 +229,6 @@ $(function() {
     ctx.closePath();
     ctx.fill();
   }
-  player(10, 200);
   function drawLineNode(context, color, x, y){
     context.fillStyle = color;
     context.beginPath();
@@ -249,6 +251,8 @@ $(function() {
     context.clearRect(0, 0, 1200, 400);
   }
 
+  player(10,200);
+    
   if(designation > 0){
     var playerDX = .1;
     var playerX = 10;
@@ -268,6 +272,7 @@ $(function() {
     $(document).keydown(onKeyDown);
     $(document).keyup(onKeyUp);
     socket.on('updateCanvas', function(lines, player){
+      console.log('hit1');
       if(player.x > 590){
         playerHasWon();
         return;
@@ -393,6 +398,7 @@ $(function() {
       drawLine(drawctx,lineStatus.color, lineStatus.x1, lineStatus.y1, e.offsetX, y); 
     });
     socket.on('updateCanvas', function(lines, player){
+      console.log('hit2');
       if(player.x > 590){
         playerHasWon();
         return;
