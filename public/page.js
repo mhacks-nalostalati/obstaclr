@@ -89,6 +89,8 @@ $(function() {
 
   //when they click the play button
   playButton.click(function() {
+
+
     //validation to ensure user chooses a role
     if (designation == undefined){
       $("#rolevalidation").css("display", "block");
@@ -102,6 +104,12 @@ $(function() {
     friendsName.val(vsName);
     if (fullPlayerList.indexOf(vsName) == -1) return;
 
+    $("#waitmessage").css("display", "block");
+
+
+  });
+
+  socket.on('accepted', function (vsName) {
     socket.emit('playerGone', name)
     socket.removeAllListeners("addPlayer");
     socket.removeAllListeners("removePlayer");
@@ -116,8 +124,8 @@ $(function() {
     
     gameStart.hide();
     gameplaySetup();
-    
-  });
+
+  })
 
   socket.on('invite', function (challenger, room, myDesignation) {
     designation = myDesignation; //designation 0 for cartographer, 1 for player
