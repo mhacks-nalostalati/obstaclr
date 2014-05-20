@@ -117,15 +117,6 @@ app.configure(function() {
   app.use(express.static(__dirname + '/public'));
 });
 
-// Heroku won't actually allow us to use WebSockets
-// so we have to setup polling instead.
-// https://devcenter.heroku.com/articles/using-socket-io-with-node-js-on-heroku
-io.configure(function () {
-  // io.set("transports", ["xhr-polling"]);
-  // io.set("polling duration", 10);
-  io.set('log level', 1);
-});
-
 var playerlist = [];
 var clientlist = [];
 var clients = {};
@@ -133,6 +124,10 @@ var clients = {};
 var lines = {};
 var players = {};
 var intervals = {};
+
+io.configure(function () {
+  io.set('log level', 0);
+});
 
 io.sockets.on('connection', function (socket) {
   
@@ -147,17 +142,22 @@ io.sockets.on('connection', function (socket) {
     playerlist.push(name);
     clientlist.push(socket.id);
     socket.broadcast.emit('addPlayer', name);
-
   });
 
-  //when a player exits window or starts playing
-  socket.on('playerGone', function (name) {
-    if (playerlist.indexOf(name) == -1) return;
+  socket.on('disconnect', function () {
+    //take out of lobby
+    var position = clientlist.indexOf(socket.id);
+    if (!(position == -1)) {
+      name = playerlist[position];
+      playerlist.splice(position, 1);
+      clientlist.splice(position, 1);
+      socket.broadcast.emit('removePlayer', name);
+    }
 
-    var position = playerlist.indexOf(name);
-    playerlist.splice(position, 1);
-    clientlist.splice(position, 1);
-    socket.broadcast.emit('removePlayer', name);
+    //take out of current games
+    for (room in io.sockets.manager.roomClients[socket.id]) {
+      if (!(room == '')) socket.broadcast.to(room.replace('/','')).emit('opponentQuit');
+    }
 
   });
 
@@ -226,10 +226,6 @@ io.sockets.on('connection', function (socket) {
   socket.on('playerPosition', function(x, y, currentRoom) {
     players[currentRoom].x = x;
     players[currentRoom].y = y;
-  });
-
-  socket.on('playerExit', function(currentRoom) {
-    socket.broadcast.to(currentRoom).emit('opponentQuit');
   });
   
 });

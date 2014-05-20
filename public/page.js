@@ -1,5 +1,5 @@
 $(function() {
-  var socket = io.connect(window.location.hostname);
+  var socket = io.connect('wss://' + window.location.hostname, {'sync disconnect on unload' : true});
 
   var fullPlayerList = [];
   var name;
@@ -221,19 +221,6 @@ $(function() {
     gamebox.show(); 
     createCanvas();
   }
-
-
-  //remove from everyone's list if they close the window
-  $(window).on('beforeunload', function(){
-    if (gamebox.is(":visible")) {
-      socket.emit('playerExit', currentRoom);
-      return name + ', you have left the game';
-    }
-    else if (name) {
-      socket.emit('playerGone', name);
-      return name + ', we are sorry to see you go';
-    }
-  });
 
   function playerHasWon(){
     if (designation == 0){
