@@ -9,4 +9,4 @@ Users Node.js server as physics engine, custom written collisions.
 
 Uses Socket.IO as live data transport layer.
 
-Play now at http://stitchtogether.herokuapp.com/
+Play now at http://obstaclr.herokuapp.com/
